@@ -1,0 +1,129 @@
+- name: Configure BR-RTR Alt Server
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Set hostname
+      hostname:
+        name: BR-RTR
+
+    - name: Create network interface directories
+      file:
+        path: "/etc/net/ifaces/{{ item }}"
+        state: directory
+        mode: 0755
+      loop:
+        - ens224
+
+    - name: Configure ens192 options
+      copy:
+        dest: /etc/net/ifaces/ens192/options
+        content: |
+          TYPE=eth
+          BOOTPROTO=static
+          DISABLED=no
+          CONFIG_IPV4=yes
+
+    - name: Copy ens192 options to ens224
+      copy:
+        src: /etc/net/ifaces/ens192/options
+        dest: /etc/net/ifaces/ens224/options
+        remote_src: true
+
+    - name: Configure ens224 IPv4 address
+      copy:
+        dest: /etc/net/ifaces/ens224/ipv4address
+        content: "55.55.55.1/28"
+
+    - name: Enable IP forwarding
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: 1
+        sysctl_set: true
+        state: present
+        reload: true
+
+    - name: Configure DNS resolver
+      copy:
+        dest: /etc/resolv.conf
+        content: "nameserver 8.8.8.8"
+
+    - name: Configure NAT
+      iptables:
+        table: nat
+        chain: POSTROUTING
+        out_interface: ens192
+        source: 0.0.0.0/0
+        jump: MASQUERADE
+        action: append
+
+    - name: Save iptables rules
+      shell: "iptables-save > /etc/sysconfig/iptables"
+      args:
+        warn: false
+
+    - name: Enable and start iptables service
+      systemd:
+        name: iptables
+        enabled: true
+        state: started
+
+    - name: Update system
+      apt:
+        update_cache: true
+        upgrade: dist
+        autoremove: true
+
+    - name: Install FRR
+      apt:
+        name: frr
+        state: present
+
+    - name: Enable OSPF daemon in FRR
+      lineinfile:
+        path: /etc/frr/daemons
+        regexp: '^ospfd=no'
+        line: 'ospfd=yes'
+
+    - name: Enable and start FRR service
+      systemd:
+        name: frr
+        enabled: true
+        state: started
+
+    - name: Configure OSPF via vtysh
+      shell: |
+        vtysh -c "conf t" -c "router ospf" -c "network 44.44.44.0/30 area 0" -c "network 55.55.55.0/28 area 0" -c "do wr" -c "end" -c "exit"
+      register: vtysh_output
+      changed_when: "'Configuration saved' in vtysh_output.stdout"
+
+    - name: Restart frr service
+      systemd:
+          name: frr
+          state: restarted
+
+    - name: Move and make backup script executable
+      file:
+        src:  "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        state: "{{ item.state }}"
+        mode:  "{{ item.mode }}"
+      loop:
+        - { src: '/home/network_admin/1.sh', dest: '/root/backup-script.sh', state: 'file', mode: '0755' }
+        - { src: '/opt/backup',             dest: '/opt/backup',             state: 'directory', mode: '0755' } # Ensure directory exists
+
+
+    - name: Run backup script (assuming it creates /opt/backup)
+      command: /root/backup-script.sh
+      args:
+        creates: /opt/backup  #  Only run if /opt/backup  doesn't exist.  Better than nothing.
+
+    - name: Reboot the system
+      reboot:
+        msg: "Rebooting system to apply changes"
+        connect_timeout: 5
+        reboot_timeout: 300
+        pre_reboot_delay: 0
+        post_reboot_delay: 30
+        test_command: uptime
