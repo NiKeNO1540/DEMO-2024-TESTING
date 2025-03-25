@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Установка имени хоста
 hostnamectl set-hostname ISP
 
