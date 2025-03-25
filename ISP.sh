@@ -23,7 +23,7 @@ echo "33.33.33.1/24" > /etc/net/ifaces/ens256/ipv4address
 echo "44.44.44.1/30" > /etc/net/ifaces/ens161/ipv4address
 
 # Включение IP-форвардинга
-echo "net.ipv4.ip_forward = 1" >> /etc/net/sysctl.conf
+sed -i "s/net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/" /etc/net/sysctl.conf
 sysctl -p
 
 # Настройка NAT
@@ -32,11 +32,12 @@ iptables-save > /etc/sysconfig/iptables
 systemctl enable --now iptables.service
 
 # Обновление системы
-apt-get update && apt-get dist-upgrade -y
+apt-get update
 
 # Установка и настройка FRR для OSPF
 apt-get install frr -y
 sed -i 's/ospfd=no/ospfd=yes/' /etc/frr/daemons
+systemctl enable --now iptables.service
 systemctl enable --now frr.service
 
 # Настройка OSPF через vtysh
