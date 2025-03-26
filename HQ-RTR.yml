@@ -57,12 +57,6 @@
         jump: MASQUERADE
       notify: Save iptables and enable service
 
-    - name: Update system
-      apt:
-        update_cache: true
-        upgrade: dist
-        force_apt_get: true
-
     - name: Install FRR
       ansible.builtin.apt:
         name: frr
