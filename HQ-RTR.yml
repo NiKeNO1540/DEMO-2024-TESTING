@@ -1,0 +1,185 @@
+- name: Configure HQ-RTR Alt Server
+  hosts: all
+  become: true
+  tasks:
+    - name: Set hostname
+      ansible.builtin.hostname:
+        name: HQ-RTR
+
+    - name: Create network interface directories
+      ansible.builtin.file:
+        path: /etc/net/ifaces/ens224
+        state: directory
+        mode: '0755'
+
+    - name: Configure ens192 options
+      ansible.builtin.blockinfile:
+        path: /etc/net/ifaces/ens192/options
+        create: true
+        block: |
+          TYPE=eth
+          BOOTPROTO=static
+          CONFIG_IPV4=yes
+          DISABLED=no
+
+    - name: Copy ens192 options to ens224
+      ansible.builtin.copy:
+        src: /etc/net/ifaces/ens192/options
+        dest: /etc/net/ifaces/ens224/options
+        remote_src: true
+
+    - name: Set IP address for ens192
+      ansible.builtin.lineinfile:
+        path: /etc/net/ifaces/ens192/ipv4address
+        line: "11.11.11.1/26"
+        create: true
+
+    - name: Enable IP forwarding
+      ansible.posix.sysctl:
+        name: net.ipv4.ip_forward
+        value: "1"
+        sysctl_set: true
+        state: present
+        reload: true
+
+    - name: Configure DNS nameserver
+      ansible.builtin.lineinfile:
+        path: /etc/resolv.conf
+        line: "nameserver 8.8.8.8"
+        create: true
+
+    - name: Configure NAT
+      ansible.builtin.iptables:
+        table: nat
+        chain: POSTROUTING
+        out_interface: ens224
+        source: 0.0.0.0/0
+        jump: MASQUERADE
+      notify: Save iptables and enable service
+
+    - name: Update system
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: dist
+        force_apt_get: true
+
+    - name: Install FRR
+      ansible.builtin.apt:
+        name: frr
+        state: present
+
+    - name: Enable OSPF in FRR
+      ansible.builtin.lineinfile:
+        path: /etc/frr/daemons
+        regexp: '^ospfd=no'
+        line: 'ospfd=yes'
+      notify: Restart FRR
+
+    - name: Configure OSPF via vtysh
+      ansible.builtin.command:
+        cmd: "vtysh -c 'conf t' -c 'router ospf' -c 'network 11.11.11.0/26 area 0' -c 'network 22.22.22.0/30 area 0' -c 'do wr' -c 'end' -c 'exit'"
+      notify: Restart FRR
+
+    - name: Install DHCP server
+      ansible.builtin.apt:
+        name: dhcp-server
+        state: present
+
+    - name: Set DHCPDARGS
+      ansible.builtin.lineinfile:
+          path: /etc/sysconfig/dhcpd
+          line: "DHCPDARGS=ens192"
+          create: true
+
+    - name: Configure DHCP server
+      ansible.builtin.copy:
+          src: /etc/dhcp/dhcpd.conf.sample
+          dest: /etc/dhcp/dhcpd.conf
+          remote_src: yes
+          backup: yes
+      notify: Restart dhcpd
+
+    - name: add dhcpd config
+      ansible.builtin.blockinfile:
+        path: /etc/dhcp/dhcpd.conf
+        block: |
+          ddns-update-style none;
+
+          subnet 11.11.11.0 netmask 255.255.255.192 {
+              option routers 11.11.11.1;
+              option subnet-mask 255.255.255.192;
+              range dynamic-bootp 11.11.11.2 11.11.11.60;
+              default-lease-time 21600;
+              max-lease-time 43200;
+
+              host HQ-SRV {
+                  hardware ethernet 00:0C:29:0B:F2:1A;
+                  fixed-address 11.11.11.2;
+              }
+          }
+      notify: Restart dhcpd
+
+    - name: Create network_admin user
+      ansible.builtin.user:
+        name: network_admin
+        password: "{{ 'P@ssw0rd' | password_hash('sha512') }}"
+        groups: root,wheel
+        append: true
+
+    - name: Install iperf3
+      ansible.builtin.package:
+        name: iperf3
+        state: present
+
+    - name: Configure SSH port forwarding
+      ansible.builtin.iptables:
+        table: nat
+        chain: PREROUTING
+        protocol: tcp
+        destination_port: 2222
+        destination: 11.11.11.2
+        jump: DNAT
+        to_destination: 11.11.11.2:22
+      notify: Save iptables and enable service
+
+    - name: Drop FORWARD to HQ-SRV:22 if not DNAT
+      ansible.builtin.iptables:
+          chain: FORWARD
+          protocol: tcp
+          destination_port: 22
+          destination: 11.11.11.2
+          ctstate: INVALID,NEW,RELATED,ESTABLISHED
+          match: conntrack
+          jump: DROP
+      notify: Save iptables and enable service
+
+  handlers:
+    - name: Save iptables and enable service
+      ansible.builtin.command: "iptables-save > /etc/sysconfig/iptables"
+      listen: "Save iptables and enable service"
+      changed_when: true
+
+    - name: enable iptables
+      ansible.builtin.systemd:
+          name: iptables
+          enabled: yes
+          state: started
+      listen: "Save iptables and enable service"
+
+    - name: Restart FRR
+      ansible.builtin.systemd:
+        name: frr
+        state: restarted
+      listen: "Restart FRR"
+
+    - name: Restart dhcpd
+      ansible.builtin.systemd:
+        name: dhcpd
+        state: restarted
+        enabled: yes
+      listen: "Restart dhcpd"
+
+    - name: Restart Network
+      ansible.builtin.systemd:
+          name: network
+          state: restarted
