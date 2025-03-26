@@ -69,11 +69,6 @@
         enabled: true
         state: started
 
-    - name: Install all files
-      shell: "rpm -ivh /root/var/cache/apt/archives/*.rpm"
-      args:
-       warn: false
-
     - name: Enable OSPF daemon in FRR
       lineinfile:
         path: /etc/frr/daemons
