@@ -3,17 +3,17 @@
   become: true
   tasks:
     - name: Set hostname
-      ansible.builtin.hostname:
+      hostname:
         name: HQ-RTR
 
     - name: Create network interface directories
-      ansible.builtin.file:
+      file:
         path: /etc/net/ifaces/ens224
         state: directory
         mode: '0755'
 
     - name: Configure ens192 options
-      ansible.builtin.blockinfile:
+      blockinfile:
         path: /etc/net/ifaces/ens192/options
         create: true
         block: |
@@ -23,19 +23,19 @@
           DISABLED=no
 
     - name: Copy ens192 options to ens224
-      ansible.builtin.copy:
+      copy:
         src: /etc/net/ifaces/ens192/options
         dest: /etc/net/ifaces/ens224/options
         remote_src: true
 
     - name: Set IP address for ens192
-      ansible.builtin.lineinfile:
+      lineinfile:
         path: /etc/net/ifaces/ens192/ipv4address
         line: "11.11.11.1/26"
         create: true
 
     - name: Enable IP forwarding
-      ansible.posix.sysctl:
+      sysctl:
         name: net.ipv4.ip_forward
         value: "1"
         sysctl_set: true
@@ -43,13 +43,13 @@
         reload: true
 
     - name: Configure DNS nameserver
-      ansible.builtin.lineinfile:
+      lineinfile:
         path: /etc/resolv.conf
         line: "nameserver 8.8.8.8"
         create: true
 
     - name: Configure NAT
-      ansible.builtin.iptables:
+      iptables:
         table: nat
         chain: POSTROUTING
         out_interface: ens224
@@ -58,7 +58,7 @@
       notify: Save iptables and enable service
 
     - name: Update system
-      ansible.builtin.apt:
+      apt:
         update_cache: true
         upgrade: dist
         force_apt_get: true
@@ -69,14 +69,14 @@
         state: present
 
     - name: Enable OSPF in FRR
-      ansible.builtin.lineinfile:
+      lineinfile:
         path: /etc/frr/daemons
         regexp: '^ospfd=no'
         line: 'ospfd=yes'
       notify: Restart FRR
 
     - name: Configure OSPF via vtysh
-      ansible.builtin.command:
+      command:
         cmd: "vtysh -c 'conf t' -c 'router ospf' -c 'network 11.11.11.0/26 area 0' -c 'network 22.22.22.0/30 area 0' -c 'do wr' -c 'end' -c 'exit'"
       notify: Restart FRR
 
@@ -86,13 +86,13 @@
         state: present
 
     - name: Set DHCPDARGS
-      ansible.builtin.lineinfile:
+      lineinfile:
           path: /etc/sysconfig/dhcpd
           line: "DHCPDARGS=ens192"
           create: true
 
     - name: Configure DHCP server
-      ansible.builtin.copy:
+      copy:
           src: /etc/dhcp/dhcpd.conf.sample
           dest: /etc/dhcp/dhcpd.conf
           remote_src: yes
@@ -100,7 +100,7 @@
       notify: Restart dhcpd
 
     - name: add dhcpd config
-      ansible.builtin.blockinfile:
+      blockinfile:
         path: /etc/dhcp/dhcpd.conf
         block: |
           ddns-update-style none;
@@ -120,7 +120,7 @@
       notify: Restart dhcpd
 
     - name: Create network_admin user
-      ansible.builtin.user:
+      user:
         name: network_admin
         password: "{{ 'P@ssw0rd' | password_hash('sha512') }}"
         groups: root,wheel
@@ -143,7 +143,7 @@
       notify: Save iptables and enable service
 
     - name: Drop FORWARD to HQ-SRV:22 if not DNAT
-      ansible.builtin.iptables:
+      iptables:
           chain: FORWARD
           protocol: tcp
           destination_port: 22
@@ -155,31 +155,31 @@
 
   handlers:
     - name: Save iptables and enable service
-      ansible.builtin.command: "iptables-save > /etc/sysconfig/iptables"
+      command: "iptables-save > /etc/sysconfig/iptables"
       listen: "Save iptables and enable service"
       changed_when: true
 
     - name: enable iptables
-      ansible.builtin.systemd:
+      systemd:
           name: iptables
           enabled: yes
           state: started
       listen: "Save iptables and enable service"
 
     - name: Restart FRR
-      ansible.builtin.systemd:
+      systemd:
         name: frr
         state: restarted
       listen: "Restart FRR"
 
     - name: Restart dhcpd
-      ansible.builtin.systemd:
+      systemd:
         name: dhcpd
         state: restarted
         enabled: yes
       listen: "Restart dhcpd"
 
     - name: Restart Network
-      ansible.builtin.systemd:
+      systemd:
           name: network
           state: restarted
