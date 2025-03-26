@@ -34,7 +34,7 @@ systemctl enable --now iptables.service
 # Обновление системы
 apt-get update
 
-# Установка и настройка FRR для OSPF (Предварительно создание файла, чтобы жизнь медом не казалась.)
+# Установка и настройка FRR для OSPF (Предварительно архивирование файлов для будущей отправки в случае если PlayBook даст сбой)
 apt-get install frr -y
 mkdir /opt/sending
 tar -czf /opt/sending/files.tgz /var/cache/apt/archives
