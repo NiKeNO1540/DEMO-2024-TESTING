@@ -6,25 +6,25 @@ Another testing style. For automatisation.
 ## BR-RTR | HQ-RTR | CLI
 
 - Базовая коммутация до ISP-a (Чтобы IP-адреса были скоммутированны изначально)
-- Предписание resolv.conf именно в /etc/net/ifaces/ens/resolv.conf (По какой-то причине оно более стабильно работает именно так)
+- Предписание resolv.conf: nameserver 8.8.8.8
 - Добавление юзера в gpasswd для получения root-прав
 
 ## BR-SRV | HQ-SRV 
 
 - Базовая коммутация до RTR
-- Предписание resolv.conf именно в /etc/net/ifaces/ens/resolv.conf (Такая же причина.)
+- Предписание resolv.conf: nameserver 8.8.8.8
 - Добавление юзера в gpasswd для получения root-прав
 
-## Команда для активации на ISP:
+## Инструкция для активации на ISP:
 
 ```bash
-apt-get update && apt-get install git && git clone https://github.com/NiKeNO1540/DEMO-2024-TESTING && mv DEMO-2024-TESTING/isp_part_1.sh isp_1_copy.sh
-
-for i in $(seq 1 1)
-> do
-> echo "#! /bin/bash" > isp_1.sh
-> cat isp_1_copy.sh >> isp_1.sh
-> chmod +x isp_1.sh
-> ./isp_1.sh
-> done
+1. bash apt-get update && apt-get install git && git clone https://github.com/NiKeNO1540/DEMO-2024-TESTING && mv DEMO-2024-TESTING/isp_part_1.sh isp_1_copy.sh ```
+2. echo "#! /bin/bash" > isp_1.sh && vim isp_1_copy.sh
+> y500y # Копирование кода в буфер обмена
+> :q
+vim isp_1.sh
+> p # Вставка кода в файл.
+> :wq
+chmod +x isp_1.sh
+./isp_1.sh
 ```
