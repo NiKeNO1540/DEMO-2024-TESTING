@@ -1,4 +1,4 @@
-# Прикольная фича с ключами + раздача на спавне
+# Генерация ключей + выдача их.
 
 ssh-keygen -t rsa
 echo -e "yes\nP@ssw0rd" ssh-copy-id branch_admin@44.44.44.2
