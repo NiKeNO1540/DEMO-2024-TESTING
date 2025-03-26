@@ -7,7 +7,7 @@ sshpass -p 'P@ssw0rd' ssh-copy-id branch_admin@44.44.44.2
 
 # Обновление пакетов через ssh на BR-RTR
 
-echo "sudo apt-get update" | ssh branch_admin@44.44.44.2
+echo "sudo apt-get update" | sshpass -p "P@ssw0rd" ssh branch_admin@44.44.44.2
 
 # Установка ansible
 
