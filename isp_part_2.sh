@@ -2,9 +2,8 @@
 
 echo "sudo apt-get update" | ssh branch_admin@44.44.44.2
 
-# Установка ansible && git
+# Установка ansible
 
-apt-get install git -y
 apt-get install ansible -y
 
 # Настройка хостов
