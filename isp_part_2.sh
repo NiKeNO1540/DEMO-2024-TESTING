@@ -2,12 +2,15 @@
 
 ssh-keygen -t rsa -b 4096 -N "" -f ~/.ssh/id_rsa -q
 ssh-keyscan -H 44.44.44.2 >> ~/.ssh/known_hosts
+ssh-keyscan -H 22.22.22.2 >> ~/.ssh/known_hosts
 apt-get install sshpass
 sshpass -p 'P@ssw0rd' ssh-copy-id branch_admin@44.44.44.2
+sshpass -p 'P@ssw0rd' ssh-copy-id admin@22.22.22.2
 
 # Обновление пакетов через ssh на BR-RTR
 
 echo "sudo apt-get update" | sshpass -p "P@ssw0rd" ssh branch_admin@44.44.44.2
+echo "sudo apt-get update" | sshpass -p "P@ssw0rd" ssh admin@22.22.22.2
 
 # Установка ansible
 
@@ -21,6 +24,9 @@ VMs:
   BR-RTR:
    ansible_host: 44.44.44.2
    ansible_user: branch_admin
+  HQ-RTR:
+   ansible_host: 22.22.22.2
+   ansible_user: admin
 EOF
 
 # Вставка строк в ansible.cfg
@@ -35,3 +41,5 @@ mv ansible.cfg /etc/ansible/ansible.cfg
 
 cp /root/DEMO-2024-TESTING/BR-RTR.yml /root/BR-RTR.yml
 ansible-playbook BR-RTR.yml
+cp /root/DEMO-2024-TESTING/BR-RTR.yml /root/HQ-RTR.yml
+ansible-playbook HQ-RTR.yml
