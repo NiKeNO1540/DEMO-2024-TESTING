@@ -1,3 +1,8 @@
+# Прикольная фича с ключами + раздача на спавне
+
+ssh-keygen -t rsa
+echo -e "yes\nP@ssw0rd" ssh-copy-id branch_admin@44.44.44.2
+
 # Магия вне хогвартса (Обновление пакетов через ssh на BR-RTR)
 
 echo "sudo apt-get update" | ssh branch_admin@44.44.44.2
