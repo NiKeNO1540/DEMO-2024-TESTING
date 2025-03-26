@@ -62,4 +62,11 @@ apt-get install iperf3 -y
 iperf3 -s &
 
 # Перезагрузка network-a для изменений
-reboot
+systemctl restart network && systemctl restart iptables
+
+# Активация второй части скрипта
+
+mv DEMO-2024-TESTING/isp_part_2.sh isp_2_copy.sh
+echo #! /bin/bash > isp_2.sh
+cat isp_2_copy.sh >> isp_2.sh
+./isp_2.sh
