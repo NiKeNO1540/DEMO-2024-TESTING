@@ -46,7 +46,7 @@
 
     - name: Configure DNS resolver
       copy:
-        dest: /etc/resolv.conf
+        dest: /etc/net/ifaces/ens192/resolv.conf
         content: "nameserver 8.8.8.8"
 
     - name: Configure NAT
@@ -68,6 +68,11 @@
         name: iptables
         enabled: true
         state: started
+        
+    - name: Install FRR service
+      ansible.builtin.package:
+        name: frr
+        state: present
 
     - name: Enable OSPF daemon in FRR
       lineinfile:
