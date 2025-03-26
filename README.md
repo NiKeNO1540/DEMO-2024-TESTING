@@ -20,7 +20,8 @@ Another testing style. For automatisation.
 ```bash
 apt-get update && apt-get install git && git clone https://github.com/NiKeNO1540/DEMO-2024-TESTING && mv DEMO-2024-TESTING/isp_part_1.sh isp_1_copy.sh
 
-do
+for i in $(seq 1 1)
+> do
 > echo "#! /bin/bash" > isp_1.sh
 > cat isp_1_copy.sh >> isp_1.sh
 > chmod +x isp_1.sh
