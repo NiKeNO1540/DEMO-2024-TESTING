@@ -2,7 +2,7 @@
 
 ssh-keygen -t rsa -b 4096 -N "" -f ~/.ssh/id_rsa -q
 apt-get install sshpass
-sshpass -p 'P@ssw0rd' ssh-copy-id branch_admin@44.44.44.2
+echo "yes" | sshpass -p 'P@ssw0rd' ssh-copy-id branch_admin@44.44.44.2
 
 # Обновление пакетов через ssh на BR-RTR
 
