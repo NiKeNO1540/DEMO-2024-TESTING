@@ -41,5 +41,5 @@ mv ansible.cfg /etc/ansible/ansible.cfg
 
 cp /root/DEMO-2024-TESTING/BR-RTR.yml /root/BR-RTR.yml
 ansible-playbook BR-RTR.yml
-cp /root/DEMO-2024-TESTING/BR-RTR.yml /root/HQ-RTR.yml
+cp /root/DEMO-2024-TESTING/HQ-RTR.yml /root/HQ-RTR.yml
 ansible-playbook HQ-RTR.yml
