@@ -1,8 +1,9 @@
 # Генерация ключей + выдача их (НИКОГДА ТАК НЕ ДЕЛАЕТЕ НА РЕАЛЬНОМ ОБОРУДОВАНИИ, ТАК КАК ЭТО ЛОГИРУЕТСЯ И ЗЛОУМЫШЛЕННИК ПОЛУЧИТ ДОСТУП К ВАШЕЙ СЕТИ, ЗДЕСЬ ОНО СДЕЛАНО В РАМКАХ АВТОМАТИЗАЦИИ)
 
 ssh-keygen -t rsa -b 4096 -N "" -f ~/.ssh/id_rsa -q
+ssh-keyscan -H 44.44.44.2 >> ~/.ssh/known_hosts
 apt-get install sshpass
-echo "yes" | sshpass -p 'P@ssw0rd' ssh-copy-id branch_admin@44.44.44.2
+sshpass -p 'P@ssw0rd' ssh-copy-id branch_admin@44.44.44.2
 
 # Обновление пакетов через ssh на BR-RTR
 
