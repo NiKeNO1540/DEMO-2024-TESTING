@@ -1,7 +1,7 @@
 # Генерация ключей + выдача их.
 
-ssh-keygen -t rsa
-echo -e "yes\nP@ssw0rd" ssh-copy-id branch_admin@44.44.44.2
+ssh-keygen -t rsa -b 4096 -N "" -f ~/.ssh/id_rsa -q
+sshpass -p 'P@ssw0rd' ssh-copy-id branch_admin@44.44.44.2
 
 # Магия вне хогвартса (Обновление пакетов через ssh на BR-RTR)
 
