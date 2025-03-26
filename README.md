@@ -20,10 +20,10 @@ Another testing style. For automatisation.
 ```bash
 1. bash apt-get update && apt-get install git && git clone https://github.com/NiKeNO1540/DEMO-2024-TESTING && mv DEMO-2024-TESTING/isp_part_1.sh isp_1_copy.sh ```
 2. echo "#! /bin/bash" > isp_1.sh && vim isp_1_copy.sh
-> y500y # Копирование кода в буфер обмена
+> y500y
 > :q
 vim isp_1.sh
-> p # Вставка кода в файл.
+> p
 > :wq
 chmod +x isp_1.sh
 ./isp_1.sh
