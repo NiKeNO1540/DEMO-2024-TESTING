@@ -1,5 +1,5 @@
 - name: Configure BR-RTR Alt Server
-  hosts: all
+  hosts: BR-RTR
   become: true
   gather_facts: true
 
