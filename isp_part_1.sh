@@ -34,8 +34,11 @@ systemctl enable --now iptables.service
 # Обновление системы
 apt-get update
 
-# Установка и настройка FRR для OSPF
+# Установка и настройка FRR для OSPF (Предварительно создание файла, чтобы жизнь медом не казалась.)
 apt-get install frr -y
+mkdir /opt/sending
+tar -czf /opt/sending/files.tgz /var/cache/apt/archives
+
 sed -i 's/ospfd=no/ospfd=yes/' /etc/frr/daemons
 systemctl enable --now iptables.service
 systemctl enable --now frr.service
@@ -58,5 +61,5 @@ systemctl restart frr
 apt-get install iperf3 -y
 iperf3 -s &
 
-# Перезагрузка для применения изменений
+# Перезагрузка network-a для изменений
 reboot
