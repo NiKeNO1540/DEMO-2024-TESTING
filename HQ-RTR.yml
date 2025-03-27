@@ -48,6 +48,11 @@
         line: "nameserver 8.8.8.8"
         create: true
 
+    - name: Restart network
+      systemd:
+        name: network
+        state: restarted
+
     - name: Configure NAT
       iptables:
         table: nat
