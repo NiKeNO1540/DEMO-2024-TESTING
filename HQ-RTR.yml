@@ -159,6 +159,7 @@
       notify: Save iptables and enable service
 
     - name: Notification system to reboot
+      shell: "echo Done!"
       notify: Reboot system
 
   handlers:
