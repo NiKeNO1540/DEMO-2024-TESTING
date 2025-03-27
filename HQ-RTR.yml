@@ -1,5 +1,5 @@
 - name: Configure HQ-RTR Alt Server
-  hosts: all
+  hosts: HQ-RTR
   become: true
   tasks:
     - name: Set hostname
