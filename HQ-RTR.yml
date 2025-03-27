@@ -158,6 +158,9 @@
           jump: DROP
       notify: Save iptables and enable service
 
+    - name: Exec bash
+      shell: "exec bash"
+
   handlers:
     - name: Save iptables and enable service
       shell: "iptables-save > /etc/sysconfig/iptables"
