@@ -66,6 +66,9 @@ iperf3 -s &
 # Перезагрузка network-a для изменений
 systemctl restart network && systemctl restart iptables
 
+ping 22.22.22.2 -c 2
+ping 44.44.44.2 -c 2
+
 # Активация второй части скрипта
 
 mv DEMO-2024-TESTING/isp_part_2.sh isp_2.sh
