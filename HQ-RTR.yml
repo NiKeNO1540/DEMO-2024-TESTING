@@ -58,7 +58,7 @@
       notify: Save iptables and enable service
 
     - name: Install FRR
-      ansible.builtin.apt:
+      ansible.builtin.package:
         name: frr
         state: present
 
@@ -75,7 +75,7 @@
       notify: Restart FRR
 
     - name: Install DHCP server
-      ansible.builtin.apt:
+      ansible.builtin.package:
         name: dhcp-server
         state: present
 
