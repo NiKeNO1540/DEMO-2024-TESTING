@@ -160,7 +160,7 @@
 
   handlers:
     - name: Save iptables and enable service
-      command: "iptables-save > /etc/sysconfig/iptables"
+      shell: "iptables-save > /etc/sysconfig/iptables"
       listen: "Save iptables and enable service"
       changed_when: true
 
