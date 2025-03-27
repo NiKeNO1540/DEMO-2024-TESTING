@@ -74,6 +74,12 @@
         line: 'ospfd=yes'
       notify: Restart FRR
 
+    - name: Enable FRR
+      systemd:
+          name: frr
+          enabled: yes
+          state: started
+
     - name: Configure OSPF via vtysh
       command:
         cmd: "vtysh -c 'conf t' -c 'router ospf' -c 'network 11.11.11.0/26 area 0' -c 'network 22.22.22.0/30 area 0' -c 'do wr' -c 'end' -c 'exit'"
