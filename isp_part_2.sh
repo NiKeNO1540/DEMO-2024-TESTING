@@ -13,11 +13,11 @@ sshpass -p 'P@ssw0rd' ssh-copy-id student@22.22.22.2
 
 cat << EOF > nameserver.sh
 #! /bin/bash
-echo "Starting on $(hostname)"
+echo Starting on $(hostname)
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
-echo "Ended"
+echo Ended
 EOF
 
 scp nameserver.sh student@44.44.44.2:/home/student/nameserver.sh
