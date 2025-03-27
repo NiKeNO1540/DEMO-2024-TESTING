@@ -66,8 +66,6 @@ systemctl restart network && systemctl restart iptables
 
 # Активация второй части скрипта
 
-mv DEMO-2024-TESTING/isp_part_2.sh isp_2_copy.sh
-echo "#! /bin/bash" > isp_2.sh
-cat isp_2_copy.sh >> isp_2.sh
+mv DEMO-2024-TESTING/isp_part_2.sh isp_2.sh
 chmod +x isp_2.sh
 ./isp_2.sh
