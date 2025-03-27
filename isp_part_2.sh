@@ -9,10 +9,30 @@ sshpass -p 'P@ssw0rd' ssh-copy-id student@44.44.44.2
 ssh-keyscan -H 22.22.22.2 >> ~/.ssh/known_hosts
 sshpass -p 'P@ssw0rd' ssh-copy-id student@22.22.22.2
 
-# Обновление пакетов через ssh на BR-RTR
+# Добавление resolv конфига через ssh.
 
-echo "sudo apt-get update" | sshpass -p "P@ssw0rd" ssh student@44.44.44.2
-echo "sudo apt-get update" | sshpass -p "P@ssw0rd" ssh student@22.22.22.2
+cat << EOF > nameserver.sh
+#! /bin/bash
+echo "Starting on $(hostname)"
+
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
+echo "Ended"
+EOF
+
+scp nameserver.sh student@44.44.44.2:/home/student/nameserver.sh
+scp nameserver.sh student@22.22.22.2:/home/student/nameserver.sh
+
+echo "sudo chmod +x nameserver.sh" | ssh student@44.44.44.2
+echo "sudo chmod +x nameserver.sh" | ssh student@22.22.22.2
+
+echo "sudo ./nameserver.sh" | ssh student@44.44.44.2
+echo "sudo ./nameserver.sh" | ssh student@22.22.22.2
+
+# Обновление пакетов.
+
+echo "sudo apt-get update" | ssh student@44.44.44.2
+echo "sudo apt-get update" | ssh student@22.22.22.2
 
 # Установка ansible
 
