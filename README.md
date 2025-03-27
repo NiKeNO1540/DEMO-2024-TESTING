@@ -5,11 +5,15 @@ Another testing style. For automatisation.
 
 ### BR-RTR | HQ-RTR | CLI
 
-- Базовая коммутация до ISP-a (Чтобы IP-адреса были скоммутированны изначально)
+- Базовая коммутация до ISP-a (Чтобы IP-адреса были скоммутированны изначально)\
+- Предписание nameserver 8.8.8.8 > /etc/resolv.conf
+- Добавление пользователя student в группу wheel и уравнение прав на уровне root-a
 
 ### BR-SRV | HQ-SRV 
 
 - Базовая коммутация до RTR
+- Предписание nameserver 8.8.8.8 > /etc/resolv.conf
+- Добавление пользователя student в группу wheel и уравнение прав на уровне root-a
 
 # Причины преднастройки
 
