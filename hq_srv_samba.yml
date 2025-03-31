@@ -1,0 +1,42 @@
+- name: Provision Samba AD DC on HQ-SRV
+  hosts: hq-srv
+  become: yes
+  tasks:
+    - name: Установить необходимые пакеты
+      package:
+        name:
+          - samba
+          - samba-dc
+          - samba-dsdb-modules
+          - samba-client
+          - krb5-workstation
+        state: present
+
+    - name: Удалить существующую конфигурацию Samba
+      file:
+        path: /var/lib/samba
+        state: absent
+
+    - name: Удалить существующий smb.conf
+      file:
+        path: /etc/samba/smb.conf
+        state: absent
+
+    - name: Provision Samba AD DC
+      expect:
+        command: samba-tool domain provision
+        responses:
+          'Realm': 'HQ.WORK\n'
+          'Domain': 'HQ\n'
+          'Server Role': 'dc\n'
+          'DNS backend': 'SAMBA_INTERNAL\n'
+          'DNS forwarder IP address': '8.8.8.8\n'
+          'Administrator password': 'P@ssw0rd\n'
+          'Retype password': 'P@ssw0rd\n'
+      register: samba_provision
+
+    - name: Включить и запустить службу Samba AD DC
+      systemd:
+        name: samba-ad-dc
+        enabled: yes
+        state: started
