@@ -88,7 +88,7 @@
 
     - name: Configure OSPF via vtysh
       shell: |
-        vtysh -c "conf t" -c "router ospf" -c "network 44.44.44.0/30 area 0" -c "network 55.55.55.0/28 area 0" -c "do wr" -c "end" -c "exit"
+        vtysh -c "conf t" -c "ip forwarding" -c "router ospf" -c "network 44.44.44.0/30 area 0" -c "network 55.55.55.0/28 area 0" -c "do wr" -c "end" -c "exit"
       register: vtysh_output
       changed_when: "'Configuration saved' in vtysh_output.stdout"
 
