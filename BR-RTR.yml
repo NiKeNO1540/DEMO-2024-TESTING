@@ -37,7 +37,7 @@
         content: "55.55.55.1/28"
 
     - name: Change IP forwarding to true
-      sysctl:
+      lineinfile:
         path: /etc/net/sysctl.conf
         regexp: '^net.ipv4.ip_forward = 0'
         line: 'net.ipv4.ip_forward = 1'
