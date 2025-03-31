@@ -48,6 +48,7 @@ systemctl enable --now frr.service
 # Настройка OSPF через vtysh
 cat << EOF | vtysh
 conf t
+ip forwarding
 router ospf
 network 44.44.44.0/30 area 0
 network 22.22.22.0/30 area 0
