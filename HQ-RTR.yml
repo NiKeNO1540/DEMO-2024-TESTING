@@ -148,14 +148,8 @@
       notify: Save iptables and enable service
 
     - name: Drop FORWARD to HQ-SRV:22 if not DNAT
-      iptables:
-          chain: FORWARD
-          protocol: tcp
-          destination_port: 22
-          destination: 11.11.11.2
-          ctstate: INVALID,NEW,RELATED,ESTABLISHED
-          match: conntrack
-          jump: DROP
+      command:
+          cmd: "iptables -A FORWARD -p tcp --dport 22 -d 11.11.11.2 -m conntrack ! --ctstate DNAT -j DROP"
       notify: Save iptables and enable service
 
     - name: Notification system to reboot
