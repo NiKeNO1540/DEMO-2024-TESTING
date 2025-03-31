@@ -49,6 +49,16 @@ VMs:
   HQ-RTR:
    ansible_host: 22.22.22.2
    ansible_user: student
+  HQ-SRV:
+   ansible_host: 11.11.11.2
+   ansible_user: student
+   ansible_port: 2222
+  BR-SRV:
+   ansible_host: 55.55.55.2
+   ansible_user: student
+  CLI:
+   ansible_host: 33.33.33.2
+   ansible_user: student
 EOF
 
 # Вставка строк в ansible.cfg
@@ -65,3 +75,7 @@ cp /root/DEMO-2024-TESTING/BR-RTR.yml /root/BR-RTR.yml
 ansible-playbook BR-RTR.yml
 cp /root/DEMO-2024-TESTING/HQ-RTR.yml /root/HQ-RTR.yml
 ansible-playbook HQ-RTR.yml
+cp /root/DEMO-2024-TESTING/HQ-SRV.yml /root/HQ-SRV.yml
+ansible-playbook HQ-SRV.yml
+cp /root/DEMO-2024-TESTING/CLI.yml /root/CLI.yml
+ansible-playbook CLI.yml
