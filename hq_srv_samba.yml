@@ -12,11 +12,6 @@
           - krb5-workstation
         state: present
 
-    - name: Удалить существующую конфигурацию Samba
-      file:
-        path: /var/lib/samba
-        state: absent
-
     - name: Удалить существующий smb.conf
       file:
         path: /etc/samba/smb.conf
@@ -25,15 +20,7 @@
     - name: Provision Samba AD DC
       expect:
         command: samba-tool domain provision
-        responses:
-          'Realm': 'HQ.WORK\n'
-          'Domain': 'HQ\n'
-          'Server Role': 'dc\n'
-          'DNS backend': 'SAMBA_INTERNAL\n'
-          'DNS forwarder IP address': '8.8.8.8\n'
-          'Administrator password': 'P@ssw0rd\n'
-          'Retype password': 'P@ssw0rd\n'
-      register: samba_provision
+          cmd: "samba-tool domain provision --realm=HQ.WORK --domain=HQ --adminpass=P@ssw0rd --dns-backend=SAMBA_INTERNAL --server-role=dc --option='dns forwarder=8.8.8.8'"
 
     - name: Включить и запустить службу Samba AD DC
       systemd:
