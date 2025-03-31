@@ -36,13 +36,12 @@
         dest: /etc/net/ifaces/ens224/ipv4address
         content: "55.55.55.1/28"
 
-    - name: Enable IP forwarding
+    - name: Change IP forwarding to true
       sysctl:
-        name: net.ipv4.ip_forward
-        value: 1
-        sysctl_set: true
-        state: present
-        reload: true
+        path: /etc/net/sysctl.conf
+        regexp: '^net.ipv4.ip_forward = 0'
+        line: 'net.ipv4.ip_forward = 1'
+      notify: Enable ipv4 forwarding
 
     - name: Configure DNS resolver
       copy:
@@ -96,6 +95,11 @@
       systemd:
           name: frr
           state: restarted
+
+    - name: Restart sysctl
+      command:
+        cmd: "sysctl -p"
+      listen: "Enable ipv4 forwarding"
 
     - name: Reboot the system
       reboot:
