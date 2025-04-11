@@ -8,6 +8,8 @@ apt-get install sshpass
 sshpass -p 'P@ssw0rd' ssh-copy-id student@44.44.44.2
 ssh-keyscan -H 22.22.22.2 >> ~/.ssh/known_hosts
 sshpass -p 'P@ssw0rd' ssh-copy-id student@22.22.22.2
+ssh-keyscan -H 33.33.33.2 >> ~/.ssh/known_hosts
+sshpass -p 'P@ssw0rd' ssh-copy-id student@33.33.33.2
 
 # Добавление resolv конфига через ssh.
 
@@ -75,7 +77,5 @@ cp /root/DEMO-2024-TESTING/BR-RTR.yml /root/BR-RTR.yml
 ansible-playbook BR-RTR.yml
 cp /root/DEMO-2024-TESTING/HQ-RTR.yml /root/HQ-RTR.yml
 ansible-playbook HQ-RTR.yml
-cp /root/DEMO-2024-TESTING/HQ-SRV.yml /root/HQ-SRV.yml
-ansible-playbook HQ-SRV.yml
 cp /root/DEMO-2024-TESTING/CLI.yml /root/CLI.yml
 ansible-playbook CLI.yml
