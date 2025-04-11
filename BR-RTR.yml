@@ -96,11 +96,6 @@
           name: frr
           state: restarted
 
-    - name: Restart sysctl
-      command:
-        cmd: "sysctl -p"
-      listen: "Enable ipv4 forwarding"
-
     - name: Reboot the system
       reboot:
         msg: "Rebooting system to apply changes"
@@ -109,3 +104,10 @@
         pre_reboot_delay: 0
         post_reboot_delay: 30
         test_command: uptime
+
+  handlers:
+
+    - name: Restart sysctl
+      command:
+        cmd: "sysctl -p"
+      listen: "Enable ipv4 forwarding"
