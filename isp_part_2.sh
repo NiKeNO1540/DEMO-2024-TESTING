@@ -24,17 +24,21 @@ EOF
 
 scp nameserver.sh student@44.44.44.2:/home/student/nameserver.sh
 scp nameserver.sh student@22.22.22.2:/home/student/nameserver.sh
+scp nameserver.sh student@33.33.33.2:/home/student/nameserver.sh
 
 echo "sudo chmod +x nameserver.sh" | ssh student@44.44.44.2
 echo "sudo chmod +x nameserver.sh" | ssh student@22.22.22.2
+echo "sudo chmod +x nameserver.sh" | ssh student@33.33.33.2
 
 echo "sudo ./nameserver.sh" | ssh student@44.44.44.2
 echo "sudo ./nameserver.sh" | ssh student@22.22.22.2
+echo "sudo ./nameserver.sh" | ssh student@33.33.33.2
 
 # Обновление пакетов.
 
 echo "sudo apt-get update" | ssh student@44.44.44.2
 echo "sudo apt-get update" | ssh student@22.22.22.2
+echo "sudo apt-get update" | ssh student@33.33.33.2
 
 # Установка ansible
 
