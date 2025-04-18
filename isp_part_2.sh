@@ -82,12 +82,10 @@ ansible-playbook BR-RTR.yml
 cp /root/DEMO-2024-TESTING/HQ-RTR.yml /root/HQ-RTR.yml
 ansible-playbook HQ-RTR.yml
 
-# Создание Backup-скрипта
-
 # Отправка Backup-скрипта HQ-RTR|HQ-SRV
 
-scp backup_script.sh student@22.22.22.2:/home/student/backup_script.sh
-scp backup_script.sh student@44.44.44.2:/home/student/backup_script.sh
+scp DEMO-2024-TESTING/backup_script.sh student@22.22.22.2:/home/student/backup_script.sh
+scp DEMO-2024-TESTING/backup_script.sh student@44.44.44.2:/home/student/backup_script.sh
 
 echo "sudo chmod +x backup_script.sh" | ssh student@44.44.44.2
 echo "sudo chmod +x backup_script.sh" | ssh student@22.22.22.2
