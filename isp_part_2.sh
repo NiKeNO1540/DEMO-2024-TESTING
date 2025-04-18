@@ -198,3 +198,14 @@ subnet 11.11.11.0 netmask 255.255.255.192 {
 }
 EOF
 
+# Переход в HQ-RTR
+
+exit
+
+ssh root@11.11.11.2
+
+# Удаление файла smb.conf
+
+rm -rf /etc/samba/smb.conf
+
+samba-tool domain provision --realm=HQ.WORK --domain=HQ --adminpass=P@ssw0rd --dns-backend=SAMBA_INTERNAL --server-role=dc --option='dns forwarder=8.8.8.8'
