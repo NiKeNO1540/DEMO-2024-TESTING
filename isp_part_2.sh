@@ -93,6 +93,108 @@ echo "sudo chmod +x backup_script.sh" | ssh student@22.22.22.2
 echo "sudo ./backup_script.sh" | ssh student@44.44.44.2
 echo "sudo ./backup_script.sh" | ssh student@22.22.22.2
 
-# Вход через ssh к студенту
+# Генерация ключей ed25519 (Отпечаток для входа в root без необходимости регистрации)
 
-ssh student@
+ssh-keyget -t ed25519
+
+# Отправка ключей на HQ-RTR|BR-RTR|HQ-SRV|BR-SRV (К этому моменту у HQ-SRV должен выдасться айпишник по DHCP, но наверное чтобы не делать лишних движений, сделать статическую маршрутизацию, потом уже будет переделано под DHCP под конец)
+
+scp /root/.ssh/id_ed25519.pub student@22.22.22.2:/home/student/id
+scp /root/.ssh/id_ed25519.pub student@44.44.44.2:/home/student/id
+ssh-keyscan -H 55.55.55.2 >> ~/.ssh/known_hosts
+ssh-keyscan -p 2222 -H 11.11.11.2 >> ~/.ssh/known_hosts
+sshpass -p "P@ssw0rd" ssh-copy-id -p 2222 student@11.11.11.2
+sshpass -p "P@ssw0rd" ssh-copy-id student@55.55.55.2
+scp /root/.ssh/id_ed25519.pub student@11.11.11.2:/home/student/id
+scp /root/.ssh/id_ed25519.pub student@55.55.55.2:/home/student/id
+
+# Копирование ключей для авторизации под root
+
+echo "sudo mkdir -p /root/.ssh" | ssh student@11.11.11.2
+echo "sudo mkdir -p /root/.ssh" | ssh student@22.22.22.2
+echo "sudo mkdir -p /root/.ssh" | ssh student@44.44.44.2
+echo "sudo mkdir -p /root/.ssh" | ssh student@55.55.55.2
+
+echo "sudo cp id /root/.ssh/authorized_keys" | ssh student@11.11.11.2
+echo "sudo cp id /root/.ssh/authorized_keys" | ssh student@22.22.22.2
+echo "sudo cp id /root/.ssh/authorized_keys" | ssh student@44.44.44.2
+echo "sudo cp id /root/.ssh/authorized_keys" | ssh student@55.55.55.2
+
+# Переделывание файла hosts.
+
+cat << EOF > /etc/ansible/hosts
+VMs:
+ hosts:
+  BR-RTR:
+   ansible_host: 44.44.44.2
+   ansible_user: root
+  HQ-RTR:
+   ansible_host: 22.22.22.2
+   ansible_user: root
+  HQ-SRV:
+   ansible_host: 11.11.11.2
+   ansible_user: root
+   ansible_port: 2222
+  BR-SRV:
+   ansible_host: 55.55.55.2
+   ansible_user: root
+  CLI:
+   ansible_host: 33.33.33.2
+   ansible_user: root
+EOF
+
+# ============================================= Первый модуль окончен. =============================================
+
+echo "============================================= Первый модуль окончен. ============================================="
+
+# ============================================= Начало второго модуля.=============================================
+
+echo "============================================= Начало второго модуля.============================================="
+
+# Переход на HQ-SRV
+
+ssh root@11.11.11.2 -p 2222
+
+# Переименование хостов
+
+hostnamectl hostname hq.work.hq-srv
+domainname hq.work
+
+# Установка утилит и выход из устройства
+
+apt-get install samba-dc -y
+apt-get install bind-utils -y
+exit
+
+# Вход в HQ-RTR
+
+ssh root@22.22.22.2
+
+# Изменение файла dhcpd.conf
+
+cat << EOF > /etc/dhcp/dhcpd.conf
+
+#See dhcpd.conf(5) for further configuration
+
+ddns-update-style none;
+
+subnet 11.11.11.0 netmask 255.255.255.192 {
+	option routers			11.11.11.1;
+	option subnet-mask		255.255.255.192;
+
+# option nis-domain		"domain.org";
+	option domain-name		"hq.work";
+	option domain-name-servers	11.11.11.2;
+	
+ range dynamic-bootp 11.11.11.2 11.11.11.60;
+	default-lease-time 21600;
+	max-lease-time 43200;
+
+	host HQ-SRV
+	{
+	hardware ethernet 00:0C:29:0B:F2:1A;
+	fixed-address 11.11.11.2;
+	}
+}
+EOF
+
