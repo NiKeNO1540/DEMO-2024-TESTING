@@ -182,11 +182,11 @@ subnet 11.11.11.0 netmask 255.255.255.192 {
 	option routers			11.11.11.1;
 	option subnet-mask		255.255.255.192;
 
-# option nis-domain		"domain.org";
+	option nis-domain		"domain.org";
 	option domain-name		"hq.work";
 	option domain-name-servers	11.11.11.2;
 	
- range dynamic-bootp 11.11.11.2 11.11.11.60;
+ 	range dynamic-bootp 11.11.11.2 11.11.11.60;
 	default-lease-time 21600;
 	max-lease-time 43200;
 
