@@ -84,20 +84,6 @@ ansible-playbook HQ-RTR.yml
 
 # Создание Backup-скрипта
 
-cat << EOF > backup-script.sh
-#! /bin/bash
-echo Starting on $(hostname -s)
-
-target_dir = "/etc"
-dest_dir = "/opt/backup"
-
-mkdir -p /opt/backup
-
-tar -czf /opt/backup/$(hostname -s)-$(date+"%d.%m.%y").tgz /etc
-
-echo Ended
-EOF
-
 # Отправка Backup-скрипта HQ-RTR|HQ-SRV
 
 scp backup_script.sh student@22.22.22.2:/home/student/backup_script.sh
