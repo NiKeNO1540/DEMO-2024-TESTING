@@ -9,13 +9,13 @@ sshpass -p 'P@ssw0rd' ssh-copy-id student@44.44.44.2
 ssh-keyscan -H 22.22.22.2 >> ~/.ssh/known_hosts
 sshpass -p 'P@ssw0rd' ssh-copy-id student@22.22.22.2
 ssh-keyscan -H 33.33.33.2 >> ~/.ssh/known_hosts
-sshpass -p 'P@ssw0rd' ssh-copy-id student@33.33.33.2
+sshpass -p 'P@ssw0rd' ssh-copy-id root@33.33.33.2
 
 # Добавление resolv конфига через ssh.
 
 cat << EOF > nameserver.sh
 #! /bin/bash
-echo Starting on $(hostname)
+echo Starting on $(hostname -s)
 
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
@@ -24,21 +24,21 @@ EOF
 
 scp nameserver.sh student@44.44.44.2:/home/student/nameserver.sh
 scp nameserver.sh student@22.22.22.2:/home/student/nameserver.sh
-scp nameserver.sh student@33.33.33.2:/home/student/nameserver.sh
+scp nameserver.sh root@33.33.33.2:/root/nameserver.sh
 
 echo "sudo chmod +x nameserver.sh" | ssh student@44.44.44.2
 echo "sudo chmod +x nameserver.sh" | ssh student@22.22.22.2
-echo "sudo chmod +x nameserver.sh" | ssh student@33.33.33.2
+echo "chmod +x nameserver.sh" | ssh root@33.33.33.2
 
 echo "sudo ./nameserver.sh" | ssh student@44.44.44.2
 echo "sudo ./nameserver.sh" | ssh student@22.22.22.2
-echo "sudo ./nameserver.sh" | ssh student@33.33.33.2
+echo "./nameserver.sh" | ssh root@33.33.33.2
 
 # Обновление пакетов.
 
 echo "sudo apt-get update" | ssh student@44.44.44.2
 echo "sudo apt-get update" | ssh student@22.22.22.2
-echo "sudo apt-get update" | ssh student@33.33.33.2
+echo "apt-get update" | ssh root@33.33.33.2
 
 # Установка ansible
 
@@ -64,7 +64,7 @@ VMs:
    ansible_user: student
   CLI:
    ansible_host: 33.33.33.2
-   ansible_user: student
+   ansible_user: root
 EOF
 
 # Вставка строк в ansible.cfg
@@ -86,25 +86,29 @@ ansible-playbook HQ-RTR.yml
 
 cat << EOF > backup-script.sh
 #! /bin/bash
-echo Starting on $(hostname)
+echo Starting on $(hostname -s)
 
 target_dir = "/etc"
 dest_dir = "/opt/backup"
 
-mkdir -p $dest_dir
+mkdir -p /opt/backup
 
-tar -czf $dest_dir/$(hostname -s)-$(date+"%d.%m.%y").tgz $target_dir
+tar -czf /opt/backup/$(hostname -s)-$(date+"%d.%m.%y").tgz /etc
 
 echo Ended
 EOF
 
 # Отправка Backup-скрипта HQ-RTR|HQ-SRV
 
-scp nameserver.sh student@22.22.22.2:/home/student/backup_script.sh
-scp nameserver.sh student@44.44.44.2:/home/student/backup_script.sh
+scp backup_script.sh student@22.22.22.2:/home/student/backup_script.sh
+scp backup_script.sh student@44.44.44.2:/home/student/backup_script.sh
 
 echo "sudo chmod +x backup_script.sh" | ssh student@44.44.44.2
 echo "sudo chmod +x backup_script.sh" | ssh student@22.22.22.2
 
 echo "sudo ./backup_script.sh" | ssh student@44.44.44.2
 echo "sudo ./backup_script.sh" | ssh student@22.22.22.2
+
+# Вход через ssh к студенту
+
+ssh student@
