@@ -81,5 +81,30 @@ cp /root/DEMO-2024-TESTING/BR-RTR.yml /root/BR-RTR.yml
 ansible-playbook BR-RTR.yml
 cp /root/DEMO-2024-TESTING/HQ-RTR.yml /root/HQ-RTR.yml
 ansible-playbook HQ-RTR.yml
-cp /root/DEMO-2024-TESTING/CLI.yml /root/CLI.yml
-ansible-playbook CLI.yml
+
+# Создание Backup-скрипта
+
+cat << EOF > backup-script.sh
+#! /bin/bash
+echo Starting on $(hostname)
+
+target_dir = "/etc"
+dest_dir = "/opt/backup"
+
+mkdir -p $dest_dir
+
+tar -czf $dest_dir/$(hostname -s)-$(date+"%d.%m.%y).tgz $target_dir
+
+echo Ended
+EOF
+
+# Отправка Backup-скрипта HQ-RTR|HQ-SRV
+
+scp nameserver.sh student@22.22.22.2:/home/student/backup_script.sh
+scp nameserver.sh student@44.44.44.2:/home/student/backup_script.sh
+
+echo "sudo chmod +x backup_script.sh" | ssh student@44.44.44.2
+echo "sudo chmod +x backup_script.sh" | ssh student@22.22.22.2
+
+echo "sudo ./backup_script.sh" | ssh student@44.44.44.2
+echo "sudo ./backup_script.sh" | ssh student@22.22.22.2
