@@ -178,6 +178,8 @@ echo "reboot" | ssh root@33.33.33.2
 echo "reboot" | ssh root@44.44.44.2
 echo "reboot" | ssh root@55.55.55.2
 
+sleep 40
+
 # Изменение файла dhcpd.conf и перезапуск DHCP
 
 cat << EOF > /root/dhcpd.conf
@@ -229,9 +231,11 @@ scp -P 2222 /root/resolv.conf root@11.11.11.2:/etc/resolv.conf
 echo "samba-tool dns zonecreate hq-srv.hq.work branch.work -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
 echo "samba-tool dns zonecreate hq-srv.hq.work 11.11.11.in-addr.arpa -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
 echo "samba-tool dns zonecreate hq-srv.hq.work 55.55.55.in-addr.arpa -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
+sleep 5
 echo "samba-tool dns add hq-srv.hq.work hq.work hq-r A 11.11.11.1 -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
 echo "samba-tool dns add hq-srv.hq.work branch.work br-r A 55.55.55.1 -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
 echo "samba-tool dns add hq-srv.hq.work branch.work br-srv A 55.55.55.2 -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
+sleep 5
 echo "samba-tool dns add hq-srv.hq.work 11.11.11.in-addr.arpa 1 PTR  hq-r.hq.work -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
 echo "samba-tool dns add hq-srv.hq.work 11.11.11.in-addr.arpa 2 PTR  hq-srv.hq.work -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
 echo "samba-tool dns add hq-srv.hq.work 55.55.55.in-addr.arpa 1 PTR  br-r.branch.work -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
