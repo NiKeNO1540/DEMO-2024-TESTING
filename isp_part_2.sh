@@ -95,7 +95,7 @@ echo "sudo ./backup_script.sh" | ssh student@22.22.22.2
 
 # Генерация ключей ed25519 (Отпечаток для входа в root без необходимости регистрации)
 
-ssh-keyget -t ed25519
+ssh-keygen -t ed25519  -b 4096 -N "" -f /root/.ssh/id_ed25519 -q
 
 # Отправка ключей на HQ-RTR|BR-RTR|HQ-SRV|BR-SRV (К этому моменту у HQ-SRV должен выдасться айпишник по DHCP, но наверное чтобы не делать лишних движений, сделать статическую маршрутизацию, потом уже будет переделано под DHCP под конец)
 
@@ -109,11 +109,6 @@ scp -P 2222 /root/.ssh/id_ed25519.pub student@11.11.11.2:/home/student/id
 scp /root/.ssh/id_ed25519.pub student@55.55.55.2:/home/student/id
 
 # Копирование ключей для авторизации под root
-
-echo "sudo mkdir -p /root/.ssh" | ssh student@11.11.11.2 -p 2222
-echo "sudo mkdir -p /root/.ssh" | ssh student@22.22.22.2
-echo "sudo mkdir -p /root/.ssh" | ssh student@44.44.44.2
-echo "sudo mkdir -p /root/.ssh" | ssh student@55.55.55.2
 
 echo "sudo cp id /root/.ssh/authorized_keys" | ssh student@11.11.11.2 -p 2222
 echo "sudo cp id /root/.ssh/authorized_keys" | ssh student@22.22.22.2
