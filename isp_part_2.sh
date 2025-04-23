@@ -122,11 +122,13 @@ scp nameserver.sh -P 2222 student@11.11.11.2:/home/student/nameserver.sh
 scp nameserver.sh student@22.22.22.2:/home/student/nameserver.sh
 
 echo "sudo chmod +x nameserver.sh" | ssh student@11.11.11.2 -p 2222
-echo "sudo chmod +x nameserver.sh" | ssh student@22.22.22.2
+echo "sudo chmod +x nameserver.sh" | ssh student@55.55.55.2
 
-echo "sudo ./nameserver.sh" | ssh student@44.44.44.2 -p 2222
-echo "sudo ./nameserver.sh" | ssh student@22.22.22.2
+echo "sudo ./nameserver.sh" | ssh student@11.11.11.2 -p 2222
+echo "sudo ./nameserver.sh" | ssh student@55.55.55.2
 
+echo "apt-get update" | ssh root@11.11.11.2 -p 2222
+echo "apt-get update" | ssh root@55.55.55.2
 
 # Переделывание файла hosts.
 
@@ -158,29 +160,20 @@ echo "============================================= Первый модуль о
 # ============================================= Начало второго модуля.=============================================
 
 echo "============================================= Начало второго модуля.============================================="
-
-# Переход на HQ-SRV
-
-ssh root@11.11.11.2 -p 2222
-
 # Переименование хостов
 
-hostnamectl hostname hq.work.hq-srv
-domainname hq.work
+echo "hostnamectl hostname hq.work.hq-srv" | ssh root@11.11.11.2 -p 2222
+echo "domainname hq.work" | ssh root@11.11.11.2 -p 2222
 
-# Установка утилит и выход из устройства
+# Установка утилит
 
-apt-get install samba-dc -y
-apt-get install bind-utils -y
-exit
+echo "apt-get install samba-dc -y" | ssh root@11.11.11.2 -p 2222
+echo "apt-get install bind-utils -y" | ssh root@11.11.11.2 -p 2222
 
-# Вход в HQ-RTR
-
-ssh root@22.22.22.2
 
 # Изменение файла dhcpd.conf и перезапуск DHCP
 
-cat << EOF > /etc/dhcp/dhcpd.conf
+cat << EOF > /root/dhcpd.conf
 
 #See dhcpd.conf(5) for further configuration
 
@@ -206,34 +199,32 @@ subnet 11.11.11.0 netmask 255.255.255.192 {
 }
 EOF
 
-systemctl restart dhcpd
+scp /root/dhcpd.conf root@22.22.22.2:/etc/dhcp/dhcpd.conf
 
-# Переход в HQ-RTR
+echo "systemctl restart dhcpd" | ssh root@22.22.22.2
 
-exit
+# Удаление файла smb.conf на HQ-SRV и настройка тулов
 
-ssh root@11.11.11.2 -p 2222
+echo "rm -rf /etc/samba/smb.conf" | ssh root@11.11.11.2 -p 2222
 
-# Удаление файла smb.conf
+echo "samba-tool domain provision --realm=HQ.WORK --domain=HQ --adminpass=P@ssw0rd --dns-backend=SAMBA_INTERNAL --server-role=dc --option='dns forwarder=8.8.8.8'" | ssh root@11.11.11.2 -p 2222
 
-rm -rf /etc/samba/smb.conf
+echo "systemctl enable --now samba.service" | ssh root@11.11.11.2 -p 2222
 
-samba-tool domain provision --realm=HQ.WORK --domain=HQ --adminpass=P@ssw0rd --dns-backend=SAMBA_INTERNAL --server-role=dc --option='dns forwarder=8.8.8.8'
-
-systemctl enable --now samba.service
-
-cat << EOF > /etc/resolv.conf
+cat << EOF > /root/resolv.conf
 domain hq.work
 nameserver 11.11.11.2
 EOF
 
-samba-tool dns zonecreate hq-srv.hq.work branch.work -U administrator --password=P@ssw0rd
-samba-tool dns zonecreate hq-srv.hq.work 11.11.11.in-addr.arpa -U administrator --password=P@ssw0rd
-samba-tool dns zonecreate hq-srv.hq.work 55.55.55.in-addr.arpa -U administrator --password=P@ssw0rd
-samba-tool dns add hq-srv.hq.work hq.work hq-r A 11.11.11.1 -U administrator --password=P@ssw0rd
-samba-tool dns add hq-srv.hq.work branch.work br-r A 55.55.55.1 -U administrator --password=P@ssw0rd
-samba-tool dns add hq-srv.hq.work branch.work br-srv A 55.55.55.2 -U administrator --password=P@ssw0rd
-samba-tool dns add hq-srv.hq.work 11.11.11.in-addr.arpa 1 PTR  hq-r.hq.work -U administrator --password=P@ssw0rd
-samba-tool dns add hq-srv.hq.work 11.11.11.in-addr.arpa 2 PTR  hq-srv.hq.work -U administrator --password=P@ssw0rd 
-samba-tool dns add hq-srv.hq.work 55.55.55.in-addr.arpa 1 PTR  br-r.branch.work -U administrator --password=P@ssw0rd
+scp -P 2222 /root/resolv.conf root@11.11.11.2:/etc/resolv.conf 
+
+echo "samba-tool dns zonecreate hq-srv.hq.work branch.work -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
+echo "samba-tool dns zonecreate hq-srv.hq.work 11.11.11.in-addr.arpa -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
+echo "samba-tool dns zonecreate hq-srv.hq.work 55.55.55.in-addr.arpa -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
+echo "samba-tool dns add hq-srv.hq.work hq.work hq-r A 11.11.11.1 -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
+echo "samba-tool dns add hq-srv.hq.work branch.work br-r A 55.55.55.1 -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
+echo "samba-tool dns add hq-srv.hq.work branch.work br-srv A 55.55.55.2 -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
+echo "samba-tool dns add hq-srv.hq.work 11.11.11.in-addr.arpa 1 PTR  hq-r.hq.work -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
+echo "samba-tool dns add hq-srv.hq.work 11.11.11.in-addr.arpa 2 PTR  hq-srv.hq.work -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
+echo "samba-tool dns add hq-srv.hq.work 55.55.55.in-addr.arpa 1 PTR  br-r.branch.work -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
 
