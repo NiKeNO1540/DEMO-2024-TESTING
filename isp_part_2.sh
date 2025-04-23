@@ -119,7 +119,7 @@ echo "sudo cp /home/student/id /root/.ssh/authorized_keys" | ssh student@55.55.5
 
 
 scp -P 2222 nameserver.sh student@11.11.11.2:/home/student/nameserver.sh
-scp nameserver.sh student@22.22.22.2:/home/student/nameserver.sh
+scp nameserver.sh student@55.55.55.2:/home/student/nameserver.sh
 
 echo "sudo chmod +x nameserver.sh" | ssh student@11.11.11.2 -p 2222
 echo "sudo chmod +x nameserver.sh" | ssh student@55.55.55.2
