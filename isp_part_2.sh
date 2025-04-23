@@ -105,20 +105,33 @@ ssh-keyscan -H 55.55.55.2 >> ~/.ssh/known_hosts
 ssh-keyscan -p 2222 -H 11.11.11.2 >> ~/.ssh/known_hosts
 sshpass -p "P@ssw0rd" ssh-copy-id -p 2222 student@11.11.11.2
 sshpass -p "P@ssw0rd" ssh-copy-id student@55.55.55.2
-scp /root/.ssh/id_ed25519.pub student@11.11.11.2:/home/student/id
+scp -P 2222 /root/.ssh/id_ed25519.pub student@11.11.11.2:/home/student/id
 scp /root/.ssh/id_ed25519.pub student@55.55.55.2:/home/student/id
 
 # Копирование ключей для авторизации под root
 
-echo "sudo mkdir -p /root/.ssh" | ssh student@11.11.11.2
+echo "sudo mkdir -p /root/.ssh" | ssh student@11.11.11.2 -p 2222
 echo "sudo mkdir -p /root/.ssh" | ssh student@22.22.22.2
 echo "sudo mkdir -p /root/.ssh" | ssh student@44.44.44.2
 echo "sudo mkdir -p /root/.ssh" | ssh student@55.55.55.2
 
-echo "sudo cp id /root/.ssh/authorized_keys" | ssh student@11.11.11.2
+echo "sudo cp id /root/.ssh/authorized_keys" | ssh student@11.11.11.2 -p 2222
 echo "sudo cp id /root/.ssh/authorized_keys" | ssh student@22.22.22.2
 echo "sudo cp id /root/.ssh/authorized_keys" | ssh student@44.44.44.2
 echo "sudo cp id /root/.ssh/authorized_keys" | ssh student@55.55.55.2
+
+# До обновляем машины HQ-SRV, BR-SRV, Ибо только сейчас ISP получил доступ к ним
+
+
+scp nameserver.sh -P 2222 student@11.11.11.2:/home/student/nameserver.sh
+scp nameserver.sh student@22.22.22.2:/home/student/nameserver.sh
+
+echo "sudo chmod +x nameserver.sh" | ssh student@11.11.11.2 -p 2222
+echo "sudo chmod +x nameserver.sh" | ssh student@22.22.22.2
+
+echo "sudo ./nameserver.sh" | ssh student@44.44.44.2 -p 2222
+echo "sudo ./nameserver.sh" | ssh student@22.22.22.2
+
 
 # Переделывание файла hosts.
 
@@ -204,7 +217,7 @@ systemctl restart dhcpd
 
 exit
 
-ssh root@11.11.11.2
+ssh root@11.11.11.2 -p 2222
 
 # Удаление файла smb.conf
 
