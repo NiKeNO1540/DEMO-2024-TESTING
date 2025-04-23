@@ -110,10 +110,10 @@ scp /root/.ssh/id_ed25519.pub student@55.55.55.2:/home/student/id
 
 # Копирование ключей для авторизации под root
 
-echo "sudo cp id /root/.ssh/authorized_keys" | ssh student@11.11.11.2 -p 2222
-echo "sudo cp id /root/.ssh/authorized_keys" | ssh student@22.22.22.2
-echo "sudo cp id /root/.ssh/authorized_keys" | ssh student@44.44.44.2
-echo "sudo cp id /root/.ssh/authorized_keys" | ssh student@55.55.55.2
+echo "sudo cp /home/student/id /root/.ssh/authorized_keys" | ssh student@11.11.11.2 -p 2222
+echo "sudo cp /home/student/id /root/.ssh/authorized_keys" | ssh student@22.22.22.2
+echo "sudo cp /home/student/id /root/.ssh/authorized_keys" | ssh student@44.44.44.2
+echo "sudo cp /home/student/id /root/.ssh/authorized_keys" | ssh student@55.55.55.2
 
 # До обновляем машины HQ-SRV, BR-SRV, Ибо только сейчас ISP получил доступ к ним
 
