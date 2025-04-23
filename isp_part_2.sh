@@ -118,7 +118,7 @@ echo "sudo cp /home/student/id /root/.ssh/authorized_keys" | ssh student@55.55.5
 # До обновляем машины HQ-SRV, BR-SRV, Ибо только сейчас ISP получил доступ к ним
 
 
-scp nameserver.sh -P 2222 student@11.11.11.2:/home/student/nameserver.sh
+scp -P 2222 nameserver.sh student@11.11.11.2:/home/student/nameserver.sh
 scp nameserver.sh student@22.22.22.2:/home/student/nameserver.sh
 
 echo "sudo chmod +x nameserver.sh" | ssh student@11.11.11.2 -p 2222
