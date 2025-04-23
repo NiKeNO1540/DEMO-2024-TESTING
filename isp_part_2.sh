@@ -170,6 +170,13 @@ echo "domainname hq.work" | ssh root@11.11.11.2 -p 2222
 echo "apt-get install samba-dc -y" | ssh root@11.11.11.2 -p 2222
 echo "apt-get install bind-utils -y" | ssh root@11.11.11.2 -p 2222
 
+# Перезапуск всех устройств
+
+echo "reboot" | ssh root@11.11.11.2 -p 2222
+echo "reboot" | ssh root@22.22.22.2
+echo "reboot" | ssh root@33.33.33.2
+echo "reboot" | ssh root@44.44.44.2
+echo "reboot" | ssh root@55.55.55.2
 
 # Изменение файла dhcpd.conf и перезапуск DHCP
 
@@ -214,6 +221,7 @@ echo "systemctl enable --now samba.service" | ssh root@11.11.11.2 -p 2222
 cat << EOF > /root/resolv.conf
 domain hq.work
 nameserver 11.11.11.2
+nameserver 8.8.8.8
 EOF
 
 scp -P 2222 /root/resolv.conf root@11.11.11.2:/etc/resolv.conf 
