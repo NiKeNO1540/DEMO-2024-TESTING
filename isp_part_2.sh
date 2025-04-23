@@ -179,13 +179,10 @@ echo "apt-get install bind-utils -y" | ssh root@11.11.11.2 -p 2222
 
 # Перезапуск всех устройств
 
-echo "reboot" | ssh root@11.11.11.2 -p 2222
-echo "reboot" | ssh root@22.22.22.2
 echo "reboot" | ssh root@33.33.33.2
-echo "reboot" | ssh root@44.44.44.2
-echo "reboot" | ssh root@55.55.55.2
-
-sleep 40
+ansible HQ-SRV,HQ-RTR,BR-SRV,BR-RTR -m reboot
+sleep 2
+echo "Перезапуск успешен"
 
 # Изменение файла dhcpd.conf и перезапуск DHCP
 
