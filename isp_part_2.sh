@@ -101,10 +101,13 @@ ssh-keygen -t ed25519  -b 4096 -N "" -f /root/.ssh/id_ed25519 -q
 
 scp /root/.ssh/id_ed25519.pub student@22.22.22.2:/home/student/id
 scp /root/.ssh/id_ed25519.pub student@44.44.44.2:/home/student/id
+sleep 5
 ssh-keyscan -H 55.55.55.2 >> ~/.ssh/known_hosts
 ssh-keyscan -p 2222 -H 11.11.11.2 >> ~/.ssh/known_hosts
+sleep 5
 sshpass -p "P@ssw0rd" ssh-copy-id -p 2222 student@11.11.11.2
 sshpass -p "P@ssw0rd" ssh-copy-id student@55.55.55.2
+sleep 5
 scp -P 2222 /root/.ssh/id_ed25519.pub student@11.11.11.2:/home/student/id
 scp /root/.ssh/id_ed25519.pub student@55.55.55.2:/home/student/id
 
