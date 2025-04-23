@@ -170,7 +170,7 @@ exit
 
 ssh root@22.22.22.2
 
-# Изменение файла dhcpd.conf
+# Изменение файла dhcpd.conf и перезапуск DHCP
 
 cat << EOF > /etc/dhcp/dhcpd.conf
 
@@ -197,6 +197,8 @@ subnet 11.11.11.0 netmask 255.255.255.192 {
 	}
 }
 EOF
+
+systemctl restart dhcpd
 
 # Переход в HQ-RTR
 
