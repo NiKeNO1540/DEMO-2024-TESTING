@@ -240,7 +240,7 @@ echo "samba-tool dns add hq-srv.hq.work hq.work hq-r A 11.11.11.1 -U administrat
 echo "samba-tool dns add hq-srv.hq.work branch.work br-r A 55.55.55.1 -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
 echo "samba-tool dns add hq-srv.hq.work branch.work br-srv A 55.55.55.2 -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
 sleep 5
-echo "samba-tool dns add hq-srv.hq.work 11.11.11.in-addr.arpa 1 PTR  hq-r.hq.work -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
-echo "samba-tool dns add hq-srv.hq.work 11.11.11.in-addr.arpa 2 PTR  hq-srv.hq.work -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
-echo "samba-tool dns add hq-srv.hq.work 55.55.55.in-addr.arpa 1 PTR  br-r.branch.work -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
+echo "samba-tool dns add hq-srv.hq.work 11.11.11.in-addr.arpa 1 PTR hq-r.hq.work -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
+echo "samba-tool dns add hq-srv.hq.work 11.11.11.in-addr.arpa 2 PTR hq-srv.hq.work -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
+echo "samba-tool dns add hq-srv.hq.work 55.55.55.in-addr.arpa 1 PTR br-r.branch.work -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
 
