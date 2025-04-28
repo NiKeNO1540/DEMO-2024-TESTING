@@ -1,0 +1,31 @@
+#!/usr/bin/expect -f
+
+set timeout -1
+spawn adcli passwd-user --domain=hq.work "Branch admin"
+match_max 100000
+expect -exact "Password for Administrator@HQ.WORK: "
+send -- "P@ssw0rd\r"
+expect -exact "\r
+Password for Branch admin: "
+send -- "P@ssw0rd\r"
+expect eof
+
+set timeout -1
+spawn adcli passwd-user --domain=hq.work "Network admin"
+match_max 100000
+expect -exact "Password for Administrator@HQ.WORK: "
+send -- "P@ssw0rd\r"
+expect -exact "\r
+Password for Network admin: "
+send -- "P@ssw0rd\r"
+expect eof
+
+set timeout -1
+spawn adcli passwd-user --domain=hq.work Admin
+match_max 100000
+expect -exact "Password for Administrator@HQ.WORK: "
+send -- "P@ssw0rd\r"
+expect -exact "\r
+Password for Admin: "
+send -- "P@ssw0rd\r"
+expect eof
