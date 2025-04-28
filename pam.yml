@@ -1,0 +1,28 @@
+- name: Вставка XML volume-блока в pam_mount.conf.xml
+  hosts: BR-SRV
+  become: yes
+  tasks:
+    - name: Вставить блок volume definitions
+      ansible.builtin.blockinfile:
+        path: /etc/security/pam_mount.conf.xml
+        marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+        insertafter: '^\s*<!-- Volume definitions --!>\s*$'
+        block: |
+          <volume uid="Admin"
+              fstype="cifs"
+              server="hq-srv.hq.work"
+              path="Admin_Files"
+              mountpoint="/mnt/All_files"
+              options="sec=krb5i,cruid=%(USERUID),nounix,uid=%(USERUID),gid=%(USERGID),file_mode=0664,dir_mode=0775"/>
+          <volume uid="Network admin"
+              fstype="cifs"
+              server="hq-srv.hq.work"
+              path="Network"
+              mountpoint="/mnt/All_files"
+              options="sec=krb5i,cruid=%(USERUID),nounix,uid=%(USERUID),gid=%(USERGID),file_mode=0664,dir_mode=0775"/>
+          <volume uid="Branch admin"
+              fstype="cifs"
+              server="hq-srv.hq.work"
+              path="Branch_Files"
+              mountpoint="/mnt/All_files"
+              options="sec=krb5i,cruid=%(USERUID),nounix,uid=%(USERUID),gid=%(USERGID),file_mode=0664,dir_mode=0775"/>
