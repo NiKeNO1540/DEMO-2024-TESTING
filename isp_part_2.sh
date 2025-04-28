@@ -245,3 +245,40 @@ echo "samba-tool dns add hq-srv.hq.work 11.11.11.in-addr.arpa 1 PTR hq-r.hq.work
 echo "samba-tool dns add hq-srv.hq.work 11.11.11.in-addr.arpa 2 PTR hq-srv.hq.work -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
 echo "samba-tool dns add hq-srv.hq.work 55.55.55.in-addr.arpa 1 PTR br-r.branch.work -U administrator --password=P@ssw0rd" | ssh root@11.11.11.2 -p 2222
 
+# Конфигурация временного подключения у HQ-SRV и CLI
+
+cat << EOF > /root/heh.
+TYPE=eth
+BOOTPROTO=static
+DISABLED=no
+CONFIG_IPV4=yes
+NM_CONTROLLED=no
+EOF
+
+echo "mkdir -p /etc/net/ifaces/ens224" | ssh root@33.33.33.2
+echo "mkdir -p /etc/net/ifaces/ens224" | ssh root@11.11.11.2 -p 2222
+
+scp -P 2222 heh. root@11.11.11.2:/etc/net/ifaces/ens224/options
+scp heh. root@33.33.33.2:/etc/net/ifaces/ens224/options
+
+echo "echo 66.66.66.1/30 > /etc/net/ifaces/ens224/ipv4address" | ssh root@33.33.33.2
+cat << EOF > /root/resolv.conf.s
+nameserver 11.11.11.2
+search hq.work branch.work
+EOF
+scp resolv.conf.s root@33.33.33.2:/etc/net/ifaces/ens224/resolv.conf
+
+echo "echo 66.66.66.2/30 > /etc/net/ifaces/ens224/ipv4address" | ssh root@11.11.11.2 -p 2222
+
+# Добавление CLI и BR-SRV в контроллер домена
+
+echo "apt-get install task-auth-ad-sssd -y" | ssh root@33.33.33.2
+echo "apt-get install task-auth-ad-sssd -y" | ssh root@55.55.55.2
+
+echo "apt-get install bind-utils -y" | ssh root@33.33.33.2
+echo "apt-get install bind-utils -y" | ssh root@55.55.55.2
+
+echo "system-auth write ad hq.work cli HQ 'administrator' 'P@ssw0rd'" | ssh root@33.33.33.2
+scp resolv.conf.a root@55.55.55.2:/etc/net/ifaces/ens192/resolv.conf
+echo "systemctl restart network" | ssh root@55.55.55.2
+echo "system-auth write ad hq.work br-srv HQ 'administrator' 'P@ssw0rd'" | ssh root@55.55.55.2
