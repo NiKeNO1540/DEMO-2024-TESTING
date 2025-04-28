@@ -323,7 +323,6 @@ cat << EOF >> /etc/samba/smb.conf
   	read only = no
    	valid users = @"HQ\Admins"
 EOF
-EOF
 
 cat << EOF | ssh root@55.55.55.2
 apt-get install pam_mount -y
@@ -338,7 +337,6 @@ cat << EOF | ssh root@55.55.55.2
 cat << EOF >> /etc/pam.d/system-auth
 session		[success=1 default=ignore] pam_succeed_if.so service = systemd-user quiet
 session		optional	pam_mount.so disable_interactive
-EOF
 EOF
 
 cat << EOF | ssh root@55.55.55.2
