@@ -305,38 +305,6 @@ EOF
 cat << EOF | ssh root@11.11.11.2 -p 2222
 mkdir /opt/{branch,network,admin}
 chmod 777 /opt/{branch,network,admin}
-
-cat << EOF >> /etc/samba/smb.conf
-[Branch_Files]
-	path = /opt/branch
- 	writable = yes
-  	read only = no
-	valid users = @"HQ\Branch admins"
-[Network]
-	path = /opt/network
- 	writable = yes
-  	read only = no
-   	valid users = @"HQ\Network admins"
-[Admin_Files]
-	path=/opt/admin
- 	writable=yes
-  	read only = no
-   	valid users = @"HQ\Admins"
-EOF
-
-cat << EOF | ssh root@55.55.55.2
-apt-get install pam_mount -y
-apt-get install cifs-utils –y
-apt-get install systemd-settings-enable-kill-user-processes -y
-EOF
-
-ansible BR-SRV -m reboot
-
-cat << EOF | ssh root@55.55.55.2
-
-cat << EOF >> /etc/pam.d/system-auth
-session		[success=1 default=ignore] pam_succeed_if.so service = systemd-user quiet
-session		optional	pam_mount.so disable_interactive
 EOF
 
 ansible-playbook /root/DEMO-2024-TESTING/pam.yml
