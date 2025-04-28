@@ -286,8 +286,8 @@ echo "system-auth write ad hq.work br-srv HQ 'administrator' 'P@ssw0rd'" | ssh r
 
 
 # Добавление пользователей в домен
-
-cat << EOF | ssh root@33.33.33.2
+scp Absolute.exp root@55.55.55.2:/root/pass.exp
+cat << EOF | ssh root@55.55.55.2
 echo P@ssw0rd | adcli join hq.work --stdin-password
 echo P@ssw0rd | adcli create-user --domain=hq.work Admin -x
 echo P@ssw0rd | adcli create-user --domain=hq.work 'Branch admin' -x
@@ -298,6 +298,7 @@ echo P@ssw0rd | adcli create-group --domain=hq.work 'Network admin' -x
 echo P@ssw0rd | adcli add-member --domain=hq.work Admins Admin -x -v
 echo P@ssw0rd | adcli add-member --domain=hq.work 'Branch admins' 'Branch admin' -x -v
 echo P@ssw0rd | adcli add-member --domain=hq.work 'Network admin' 'Network admin' -x -v
+./pass.exp
 EOF
 
 # Начало конфигурации файлового сервера на HQ-SRV
