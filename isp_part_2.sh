@@ -273,6 +273,7 @@ echo "echo 66.66.66.2/30 > /etc/net/ifaces/ens224/ipv4address" | ssh root@11.11.
 # Добавление CLI и BR-SRV в контроллер домена
 
 echo "apt-get install task-auth-ad-sssd -y" | ssh root@33.33.33.2
+echo "reboot" | ssh root@33.33.33.2
 echo "apt-get install task-auth-ad-sssd -y" | ssh root@55.55.55.2
 
 echo "apt-get install bind-utils -y" | ssh root@33.33.33.2
