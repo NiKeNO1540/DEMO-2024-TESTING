@@ -339,4 +339,4 @@ session		[success=1 default=ignore] pam_succeed_if.so service = systemd-user qui
 session		optional	pam_mount.so disable_interactive
 EOF
 
-ansible-playbook pam.yml
+ansible-playbook /root/DEMO-2024-TESTING/pam.yml
