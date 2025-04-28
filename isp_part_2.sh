@@ -341,7 +341,7 @@ EOF
 
 cat << EOF | ssh root@55.55.55.2
 
-sed '10 a\
+sed '15 a\
 <volume uid="Admin"
 		fstype="cifs"
   		server="hq-srv.hq.work"
