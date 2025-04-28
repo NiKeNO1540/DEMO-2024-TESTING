@@ -288,7 +288,7 @@ echo "system-auth write ad hq.work br-srv HQ 'administrator' 'P@ssw0rd'" | ssh r
 # Добавление пользователей в домен
 
 cat << EOF | ssh root@33.33.33.2
-echo P@ssw0rd | adcli join hq.work --stdin-password" 
+echo P@ssw0rd | adcli join hq.work --stdin-password
 echo P@ssw0rd | adcli create-user --domain=hq.work Admin -x
 echo P@ssw0rd | adcli create-user --domain=hq.work 'Branch admin' -x
 echo P@ssw0rd | adcli create-user --domain=hq.work 'Network admin' -x
