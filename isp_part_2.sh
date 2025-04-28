@@ -280,6 +280,6 @@ echo "apt-get install bind-utils -y" | ssh root@33.33.33.2
 echo "apt-get install bind-utils -y" | ssh root@55.55.55.2
 
 echo "system-auth write ad hq.work cli HQ 'administrator' 'P@ssw0rd'" | ssh root@33.33.33.2
-scp resolv.conf.a root@55.55.55.2:/etc/net/ifaces/ens192/resolv.conf
+scp resolv.conf.s root@55.55.55.2:/etc/net/ifaces/ens192/resolv.conf
 echo "systemctl restart network" | ssh root@55.55.55.2
 echo "system-auth write ad hq.work br-srv HQ 'administrator' 'P@ssw0rd'" | ssh root@55.55.55.2
