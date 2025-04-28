@@ -339,27 +339,4 @@ session		[success=1 default=ignore] pam_succeed_if.so service = systemd-user qui
 session		optional	pam_mount.so disable_interactive
 EOF
 
-cat << EOF | ssh root@55.55.55.2
-
-sed '15 a\
-<volume uid="Admin"
-		fstype="cifs"
-  		server="hq-srv.hq.work"
-    		path="Admin_Files"
-      		mountpoint="/mnt/All_files"
-		options="sec=krb5i,cruid=%(USERUID),nounix,uid=%(USERUID),gid=%(USERGID),file_mode=0664,dir_mode=0775"/>\
-<volume uid="Network admin"
-		fstype="cifs"
-  		server="hq-srv.hq.work"
-    		path="Network"
-      		mountpoint="/mnt/All_files"
-		options="sec=krb5i,cruid=%(USERUID),nounix,uid=%(USERUID),gid=%(USERGID),file_mode=0664,dir_mode=0775"/>\
-<volume uid="Branch admin"
-		fstype="cifs"
-  		server="hq-srv.hq.work"
-    		path="Branch_Files"
-      		mountpoint="/mnt/All_files"
-		options="sec=krb5i,cruid=%(USERUID),nounix,uid=%(USERUID),gid=%(USERGID),file_mode=0664,dir_mode=0775"/>' /etc/security/pam_mount.conf.xml > pam_mount.conf.xml
-rm -rf /etc/security/pam_mount.conf.xml
-mv pam_mount.conf.xml /etc/security/pam_mount.conf.xml
-EOF
+ansible-playbook pam.yml
