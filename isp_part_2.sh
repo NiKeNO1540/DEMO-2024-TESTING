@@ -283,3 +283,85 @@ echo "system-auth write ad hq.work cli HQ 'administrator' 'P@ssw0rd'" | ssh root
 scp resolv.conf.s root@55.55.55.2:/etc/net/ifaces/ens192/resolv.conf
 echo "systemctl restart network" | ssh root@55.55.55.2
 echo "system-auth write ad hq.work br-srv HQ 'administrator' 'P@ssw0rd'" | ssh root@55.55.55.2
+
+
+# Добавление пользователей в домен
+
+cat << EOF | ssh root@33.33.33.2
+echo P@ssw0rd | adcli join hq.work --stdin-password" 
+echo P@ssw0rd | adcli create-user --domain=hq.work Admin -x
+echo P@ssw0rd | adcli create-user --domain=hq.work 'Branch admin' -x
+echo P@ssw0rd | adcli create-user --domain=hq.work 'Network admin' -x
+echo P@ssw0rd | adcli create-group --domain=hq.work Admins -x
+echo P@ssw0rd | adcli create-group --domain=hq.work 'Branch admins' -x
+echo P@ssw0rd | adcli create-group --domain=hq.work 'Network admin' -x
+echo P@ssw0rd | adcli add-member --domain=hq.work Admins Admin -x -v
+echo P@ssw0rd | adcli add-member --domain=hq.work 'Branch admins' 'Branch admin' -x -v
+echo P@ssw0rd | adcli add-member --domain=hq.work 'Network admin' 'Network admin' -x -v
+EOF
+
+# Начало конфигурации файлового сервера на HQ-SRV
+
+cat << EOF | ssh root@11.11.11.2 -p 2222
+mkdir /opt/{branch,network,admin}
+chmod 777 /opt/{branch,network,admin}
+
+cat << EOF >> /etc/samba/smb.conf
+[Branch_Files]
+	path = /opt/branch
+ 	writable = yes
+  	read only = no
+	valid users = @"HQ\Branch admins"
+[Network]
+	path = /opt/network
+ 	writable = yes
+  	read only = no
+   	valid users = @"HQ\Network admins"
+[Admin_Files]
+	path=/opt/admin
+ 	writable=yes
+  	read only = no
+   	valid users = @"HQ\Admins"
+EOF
+EOF
+
+cat << EOF | ssh root@55.55.55.2
+apt-get install pam_mount -y
+apt-get install cifs-utils –y
+apt-get install systemd-settings-enable-kill-user-processes -y
+EOF
+
+ansible BR-SRV -m reboot
+
+cat << EOF | ssh root@55.55.55.2
+
+cat << EOF >> /etc/pam.d/system-auth
+session		[success=1 default=ignore] pam_succeed_if.so service = systemd-user quiet
+session		optional	pam_mount.so disable_interactive
+EOF
+EOF
+
+cat << EOF | ssh root@55.55.55.2
+
+sed '10 a\
+<volume uid="Admin"
+		fstype="cifs"
+  		server="hq-srv.hq.work"
+    		path="Admin_Files"
+      		mountpoint="/mnt/All_files"
+		options="sec=krb5i,cruid=%(USERUID),nounix,uid=%(USERUID),gid=%(USERGID),file_mode=0664,dir_mode=0775"/>\
+<volume uid="Network admin"
+		fstype="cifs"
+  		server="hq-srv.hq.work"
+    		path="Network"
+      		mountpoint="/mnt/All_files"
+		options="sec=krb5i,cruid=%(USERUID),nounix,uid=%(USERUID),gid=%(USERGID),file_mode=0664,dir_mode=0775"/>\
+<volume uid="Branch admin"
+		fstype="cifs"
+  		server="hq-srv.hq.work"
+    		path="Branch_Files"
+      		mountpoint="/mnt/All_files"
+		options="sec=krb5i,cruid=%(USERUID),nounix,uid=%(USERUID),gid=%(USERGID),file_mode=0664,dir_mode=0775"/>' /etc/security/pam_mount.conf.xml > pam_mount.conf.xml
+rm -rf /etc/security/pam_mount.conf.xml
+mv pam_mount.conf.xml /etc/security/pam_mount.conf.xml
+EOF
