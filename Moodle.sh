@@ -36,7 +36,7 @@ git clone -b $MOODLE_VERSION git://git.moodle.org/moodle.git
 # === Создание директории moodledata ===
 echo "[4/9] Создание директории moodledata..."
 mkdir -p "$MOODLEDATA_DIR"
-chown -R www-data:www-data "$MOODLE_DIR" "$MOODLEDATA_DIR"
+chown -R apache2:apache2 "$MOODLE_DIR" "$MOODLEDATA_DIR"
 chmod -R 755 "$MOODLE_DIR" "$MOODLEDATA_DIR"
 
 # === Создание базы данных и пользователя ===
@@ -50,7 +50,7 @@ MYSQL_SCRIPT
 
 # === Установка Moodle через CLI ===
 echo "[6/9] Установка Moodle через CLI..."
-sudo -u www-data php /var/www/html/moodle/admin/cli/install.php \
+sudo -u apache2 php /var/www/html/moodle/admin/cli/install.php \
 --chmod=2770 \
 --lang=ru \
 --wwwroot=$DOMAIN \
