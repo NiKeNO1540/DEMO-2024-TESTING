@@ -1,5 +1,5 @@
-- name: Вставка XML volume-блока в pam_mount.conf.xml
-  hosts: BR-SRV
+- name: Вставить блок конфигурации в smb.conf на другом хосте
+  hosts: HQ-SRV
   become: yes
   vars:
     samba_shares_block: |
@@ -20,10 +20,6 @@
         writable = yes
         read only = no
         valid users = @"HQ\\Admins"
-    
-    system_auth_block: |
-      session    [success=1 default=ignore] pam_succeed_if.so service = systemd-user quiet
-      session    optional pam_mount.so disable_interactive
 
   tasks:
     - name: Вставить блок конфигурации в smb.conf
@@ -33,6 +29,15 @@
         block: "{{ samba_shares_block }}"
         insertafter: EOF
 
+- name: Настройка клиента на BR-SRV
+  hosts: BR-SRV
+  become: yes
+  vars:
+    system_auth_block: |
+      session    [success=1 default=ignore] pam_succeed_if.so service = systemd-user quiet
+      session    optional pam_mount.so disable_interactive
+
+  tasks:
     - name: Установка пакетов
       ansible.builtin.package:
         name:
