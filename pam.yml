@@ -60,7 +60,7 @@
       ansible.builtin.blockinfile:
         path: /etc/security/pam_mount.conf.xml
         marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
-        insertafter: '^\s*<!-- Volume definitions --!>\s*$'
+        insertafter: '^\s*<!-- Volume definitions -->\s*$'
         block: |
           <volume uid="Admin"
               fstype="cifs"
