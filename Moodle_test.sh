@@ -36,7 +36,7 @@ git clone -b $MOODLE_VERSION git://git.moodle.org/moodle.git
 # === moodledata ===
 echo "[4/7] moodledata..."
 mkdir -p "$MOODLEDATA_DIR"
-chown -R www-data:www-data "$MOODLE_DIR" "$MOODLEDATA_DIR"
+chown -R apache2:apache2 "$MOODLE_DIR" "$MOODLEDATA_DIR"
 chmod -R 755 "$MOODLE_DIR" "$MOODLEDATA_DIR"
 
 # === База данных ===
@@ -50,7 +50,7 @@ MYSQL_SCRIPT
 
 # === Установка Moodle CLI ===
 echo "[6/7] Установка Moodle..."
-sudo -u www-data php "$MOODLE_DIR/admin/cli/install.php" \
+sudo -u apache2 php "$MOODLE_DIR/admin/cli/install.php" \
 --chmod=2770 \
 --lang=ru \
 --wwwroot=$DOMAIN \
@@ -77,15 +77,15 @@ cat <<EOF > /etc/httpd2/conf/sites-available/moodle.conf
     ServerName hq-srv.hq.work
     ServerAlias moodle.hq-srv.hq.work
     <Directory $MOODLE_DIR>
-        Options Indexes FollowSymLinks
+        Options -Indexes +FollowSymLinks
         AllowOverride All
         Require all granted
     </Directory>
 </VirtualHost>
 EOF
 
-a2ensite moodle.conf
-a2enmod rewrite
+ln -sf /etc/httpd2/conf/sites-available/moodle.conf /etc/httpd/conf/sites-enabled/
+
 systemctl restart httpd2
 
 # === Создание CSV пользователей с кастомным полем "group" ===
@@ -108,7 +108,7 @@ EOF
 
 # === Создание кастомного профиля "group" ===
 echo "[9] Создание пользовательского поля 'group'..."
-sudo -u www-data php "$MOODLE_DIR/user/profile/definelib.php" <<'PHP_SCRIPT'
+sudo -u apache php "$MOODLE_DIR/user/profile/definelib.php" <<'PHP_SCRIPT'
 <?php
 define('CLI_SCRIPT', true);
 require(dirname(__FILE__) . '/../../config.php');
