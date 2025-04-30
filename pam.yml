@@ -7,19 +7,19 @@
         path = /opt/branch
         writable = yes
         read only = no
-        valid users = @"HQ\\Branch admins"
+        valid users = @"HQ\Branch admins"
 
       [Network]
         path = /opt/network
         writable = yes
         read only = no
-        valid users = @"HQ\\Network admins"
+        valid users = @"HQ\Network admins"
 
       [Admin_Files]
         path = /opt/admin
         writable = yes
         read only = no
-        valid users = @"HQ\\Admins"
+        valid users = @"HQ\Admins"
 
   tasks:
     - name: Вставить блок конфигурации в smb.conf
