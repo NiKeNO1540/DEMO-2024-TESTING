@@ -20,10 +20,11 @@
         writable = yes
         read only = no
         valid users = @"HQ\\Admins"
-      
-      system_auth_block: |
-        session		[success=1 default=ignore] pam_succeed_if.so service = systemd-user quiet
-        session		optional	pam_mount.so disable_interactive
+    
+    system_auth_block: |
+      session    [success=1 default=ignore] pam_succeed_if.so service = systemd-user quiet
+      session    optional pam_mount.so disable_interactive
+
   tasks:
     - name: Вставить блок конфигурации в smb.conf
       ansible.builtin.blockinfile:
@@ -35,27 +36,27 @@
     - name: Установка пакетов
       ansible.builtin.package:
         name:
-        - pam_mount
-        - cifs-utils
-        - systemd-settings-enable-kill-user-processes
+          - pam_mount
+          - cifs-utils
+          - systemd-settings-enable-kill-user-processes
         state: present
 
-    - name: Reboot the system
-      reboot:
+    - name: Перезагрузка системы
+      ansible.builtin.reboot:
         msg: "Rebooting system to apply changes"
         connect_timeout: 5
         reboot_timeout: 300
         pre_reboot_delay: 0
         post_reboot_delay: 30
         test_command: uptime
-        
-    - name: Вставить блок конфигурации в smb.conf
+
+    - name: Вставить блок конфигурации в system-auth
       ansible.builtin.blockinfile:
         path: /etc/pam.d/system-auth
         marker: "# {mark} ANSIBLE MANAGED SYS-AUT SHARES BLOCK"
         block: "{{ system_auth_block }}"
         insertafter: EOF 
-        
+
     - name: Вставить блок volume definitions
       ansible.builtin.blockinfile:
         path: /etc/security/pam_mount.conf.xml
