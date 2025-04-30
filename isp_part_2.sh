@@ -297,7 +297,8 @@ echo P@ssw0rd | adcli create-group --domain=hq.work 'Branch admins' -x
 echo P@ssw0rd | adcli create-group --domain=hq.work 'Network admin' -x
 echo P@ssw0rd | adcli add-member --domain=hq.work Admins Admin -x -v
 echo P@ssw0rd | adcli add-member --domain=hq.work 'Branch admins' 'Branch admin' -x -v
-echo P@ssw0rd | adcli add-member --domain=hq.work 'Network admin' 'Network admin' -x -v
+echo P@ssw0rd | adcli add-member --domain=hq.work 'Network admins' 'Network admin' -x -v
+chmod +x /root/pass.exp
 ./pass.exp
 EOF
 
