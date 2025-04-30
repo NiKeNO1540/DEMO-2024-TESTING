@@ -135,7 +135,7 @@ PHP_SCRIPT
 
 # === Загрузка пользователей в Moodle ===
 echo "[10] Загрузка пользователей..."
-sudo -u apache php "$MOODLE_DIR/admin/tool/uploaduser/cli/upload_user.php" --file=/tmp/users.csv --mode=addnew
+sudo -u apache2 php "$MOODLE_DIR/admin/tool/uploaduser/cli/upload_user.php" --file=/tmp/users.csv --mode=addnew
 
 echo "✅ Установка завершена!"
 echo "Открой в браузере: $DOMAIN"
