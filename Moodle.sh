@@ -86,8 +86,8 @@ EOF
 mkdir -p /etc/httpd2/conf/sites-enabled
 ln -sf /etc/httpd2/conf/sites-available/moodle.conf /etc/httpd/conf/sites-enabled/
 
-systemctl enable httpd
-systemctl restart httpd
+systemctl enable -- now httpd2
+systemctl restart httpd2
 
 # === Создание групп и пользователей ===
 echo "[8/9] Создание групп и пользователей..."
