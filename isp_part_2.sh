@@ -286,7 +286,7 @@ echo "system-auth write ad hq.work br-srv HQ 'administrator' 'P@ssw0rd'" | ssh r
 
 
 # Добавление пользователей в домен
-scp Absolute.exp root@55.55.55.2:/root/pass.exp
+scp DEMO-2024-TESTING/Absolute.exp root@55.55.55.2:/root/pass.exp
 cat << EOF | ssh root@55.55.55.2
 echo P@ssw0rd | adcli join hq.work --stdin-password
 echo P@ssw0rd | adcli create-user --domain=hq.work Admin -x
