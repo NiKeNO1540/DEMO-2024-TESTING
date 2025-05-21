@@ -47,9 +47,7 @@
           - php8.0-zip
           - php8.0-openssl
           - httpd2
-          - mysql-server
-          - wget
-          - unzip
+          - MySQL-Server
         state: present
 
     - name: Включение и запуск служб
@@ -60,12 +58,6 @@
       loop:
         - mysqld
         - httpd2
-
-    - name: Ожидание запуска MySQL
-      wait_for:
-        port: 3306
-        state: started
-        delay: 5
 
     - name: Создание базы данных Moodle
       community.mysql.mysql_db:
