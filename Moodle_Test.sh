@@ -27,6 +27,8 @@ echo "==> Настройка MySQL..."
 systemctl start mysqld
 systemctl enable --now mysqld
 
+sleep 3
+
 mysql -u root <<EOF
 CREATE DATABASE ${MOODLE_DB} DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 CREATE USER '${MOODLE_DB_USER}'@'localhost' IDENTIFIED WITH mysql_native_password BY '${MOODLE_DB_PASS}';
