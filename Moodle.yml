@@ -23,33 +23,6 @@
 
   tasks:
 
-    - name: Установка необходимых пакетов
-      package:
-        name:
-          - apache2-base
-          - apache2-httpd-prefork
-          - apache2-mod_php8.0
-          - apache2-mods
-          - php8.0-curl
-          - php8.0-fileinfo
-          - php8.0-fpm-fcgi
-          - php8.0-gd
-          - php8.0-intl
-          - php8.0-ldap
-          - php8.0-mbstring
-          - php8.0-mysqlnd
-          - php8.0-mysqlnd-mysqli
-          - php8.0-opcache
-          - php8.0-soap
-          - php8.0-sodium
-          - php8.0-xmlreader
-          - php8.0-xmlrpc
-          - php8.0-zip
-          - php8.0-openssl
-          - httpd2
-          - MySQL-Server
-        state: present
-
     - name: Включение и запуск служб
       systemd:
         name: "{{ item }}"
