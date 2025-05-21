@@ -29,7 +29,7 @@ systemctl enable --now mysqld
 
 mysql -u root <<EOF
 CREATE DATABASE ${MOODLE_DB} DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-CREATE USER '${MOODLE_DB_USER}'@'localhost' IDENTIFIED BY '${MOODLE_DB_PASS}';
+CREATE USER '${MOODLE_DB_USER}'@'localhost' IDENTIFIED WITH mysql_native_password BY '${MOODLE_DB_PASS}';
 GRANT ALL PRIVILEGES ON ${MOODLE_DB}.* TO '${MOODLE_DB_USER}'@'localhost';
 FLUSH PRIVILEGES;
 EOF
