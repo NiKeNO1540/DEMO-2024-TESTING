@@ -6,4 +6,5 @@ systemctl enable --now httpd2
 apt-get install –y MySQL-server
 systemctl enable --now mysqld
 
+ansible-galaxy collection install community.mysql
 ansible-playbook DEMO-2024-TESTING/Moodle.yml
