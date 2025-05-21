@@ -1,0 +1,152 @@
+- name: Установка Moodle на ALT Server
+  hosts: BR-SRV
+  become: true
+  vars:
+    moodle_version: "4.3"
+    moodle_dir: "/var/www/moodle"
+    moodle_data_dir: "/var/moodledata"
+    moodle_db_name: "moodle"
+    moodle_db_user: "moodleuser"
+    moodle_db_password: "moodle"
+    moodle_url: "http://localhost/moodle"
+
+  tasks:
+
+  - name: Установка необходимых пакетов
+    ansible.builtin.package:
+      name:
+        - nginx
+        - php8.1
+        - php8.1-mysqlnd
+        - php8.1-xml
+        - php8.1-mbstring
+        - php8.1-curl
+        - php8.1-soap
+        - php8.1-zip
+        - php8.1-fileinfo
+        - php8.1-intl
+        - php8.1-opcache
+        - php8.1-gd
+        - php8.1-cli
+        - php8.1-fpm
+        - mariadb
+        - mariadb-server
+        - unzip
+        - wget
+        - policycoreutils
+      state: present
+
+  - name: Включение и запуск MariaDB
+    ansible.builtin.service:
+      name: mariadb
+      state: started
+      enabled: true
+
+  - name: Создание базы данных Moodle
+    mysql_db:
+      name: "{{ moodle_db_name }}"
+      state: present
+
+  - name: Создание пользователя базы данных
+    mysql_user:
+      name: "{{ moodle_db_user }}"
+      password: "{{ moodle_db_password }}"
+      priv: "{{ moodle_db_name }}.*:ALL"
+      host: "localhost"
+      state: present
+
+  - name: Включение и запуск PHP-FPM
+    ansible.builtin.service:
+      name: php-fpm
+      state: started
+      enabled: true
+
+  - name: Включение и запуск nginx
+    ansible.builtin.service:
+      name: nginx
+      state: started
+      enabled: true
+
+  - name: Создание директории для Moodle
+    ansible.builtin.file:
+      path: "{{ moodle_dir }}"
+      state: directory
+      owner: nginx
+      group: nginx
+      mode: '0755'
+
+  - name: Создание директории для moodledata
+    ansible.builtin.file:
+      path: "{{ moodle_data_dir }}"
+      state: directory
+      owner: nginx
+      group: nginx
+      mode: '0770'
+
+  - name: Скачивание Moodle
+    ansible.builtin.get_url:
+      url: "https://download.moodle.org/download.php/direct/stable{{ moodle_version | regex_replace('\\..*$', '') }}/moodle-{{ moodle_version }}.tgz"
+      dest: /tmp/moodle.tgz
+
+  - name: Распаковка Moodle
+    ansible.builtin.unarchive:
+      src: /tmp/moodle.tgz
+      dest: /var/www/
+      remote_src: yes
+      creates: "{{ moodle_dir }}/index.php"
+
+  - name: Настройка прав на директорию Moodle
+    ansible.builtin.file:
+      path: "{{ moodle_dir }}"
+      recurse: yes
+      owner: nginx
+      group: nginx
+
+  - name: Настройка SELinux (если включен)
+    ansible.builtin.command: setsebool -P httpd_can_network_connect_db 1
+    when: ansible_selinux.status == "enabled"
+
+  - name: Настройка конфигурации nginx для Moodle
+    ansible.builtin.copy:
+      dest: /etc/nginx/conf.d/moodle.conf
+      content: |
+        server {
+            listen 80;
+            server_name _;
+            root {{ moodle_dir }};
+            index index.php index.html index.htm;
+
+            location / {
+                try_files $uri $uri/ =404;
+            }
+
+            location ~ [^/]\.php(/|$) {
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                fastcgi_pass unix:/run/php-fpm/php-fpm.sock;
+                fastcgi_index index.php;
+                include fastcgi_params;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                fastcgi_param PATH_INFO $fastcgi_path_info;
+            }
+
+            location ~* \.(jpg|jpeg|gif|css|png|js|ico|html)$ {
+                expires max;
+                log_not_found off;
+            }
+        }
+
+  - name: Перезапуск nginx
+    ansible.builtin.service:
+      name: nginx
+      state: restarted
+
+  - name: Вывод инструкции по завершению установки
+    ansible.builtin.debug:
+      msg: |
+        Moodle установлен.
+        Перейдите в браузере по адресу: {{ moodle_url }}
+        Завершите установку через веб-интерфейс.
+        Данные БД:
+          Имя базы: {{ moodle_db_name }}
+          Пользователь: {{ moodle_db_user }}
+          Пароль: {{ moodle_db_password }}
