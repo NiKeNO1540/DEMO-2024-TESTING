@@ -36,10 +36,14 @@ EOF
 
 # === УСТАНОВКА MOODLE ===
 echo "==> Загрузка и установка Moodle..."
-cd /var/www/html
-wget https://download.moodle.org/download.php/direct/stable${MOODLE_VERSION//./}/moodle-latest-${MOODLE_VERSION}.tgz -O moodle.tgz
-tar -xzf moodle.tgz
-rm -f moodle.tgz
+apt-get install –y git
+git clone git://git.moodle.org/moodle.git
+cd moodle
+git branch –a 
+git branch --track MOODLE_403_STABLE origin/MOODLE_403_STABLE
+git checkout MOODLE_403_STABLE
+cd ../
+cp –R moodle /var/www/html
 
 mkdir -p "$MOODLE_DATA"
 chown -R apache2:apache2 "$MOODLE_DATA"
