@@ -25,12 +25,12 @@ apt-get install -y MySQL-server unzip wget
 # === НАСТРОЙКА MySQL ===
 echo "==> Настройка MySQL..."
 systemctl start mysqld
-systemctl enable mysqld
+systemctl enable --now mysqld
 
 mysql -u root <<EOF
-CREATE DATABASE ${MOODLE} DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE ${MOODLE_DB} DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 CREATE USER '${MOODLE_DB_USER}'@'localhost' IDENTIFIED BY '${MOODLE_DB_PASS}';
-GRANT ALL PRIVILEGES ON ${MOODLE}.* TO '${MOODLE_DB_USER}'@'localhost';
+GRANT ALL PRIVILEGES ON ${MOODLE_DB}.* TO '${MOODLE_DB_USER}'@'localhost';
 FLUSH PRIVILEGES;
 EOF
 
@@ -50,6 +50,29 @@ chown -R apache2:apache2 "$MOODLE_DATA"
 chmod -R 770 "$MOODLE_DATA"
 
 chown -R apache:apache "$MOODLE_DIR"
+
+# === НАСТРОЙКА APACHE ===
+echo "==> Настройка Apache..."
+
+cat > /etc/httpd2/conf/sites-available/moodle.conf <<EOF
+<VirtualHost *:80>
+    ServerName hq-srv.hq.work
+    ServerAlias moodle.hq-srv.hq.work
+    DocumentRoot "$MOODLE_DIR"
+    <Directory "$MOODLE_DIR">
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+EOF
+
+ln -s /etc/httpd2/conf/sites-available/moodle.conf /etc/httpd2/conf/sites-enabled/
+
+sed -i "s/; max_input_vars = 1000/max_input_vars = 5000/g" /etc/php/8.0/apache2-mod_php/php.ini
+
+systemctl restart httpd2
+systemctl enable --now httpd2
 
 # === УСТАНОВКА САЙТА С ПОМОЩЬЮ CLI ===
 echo "==> Установка Moodle в headless-режиме..."
@@ -73,29 +96,6 @@ sudo -u apache2 /usr/bin/php admin/cli/install.php \
   --adminemail="$MOODLE_ADMIN_EMAIL" \
   --non-interactive \
   --agree-license
-
-# === НАСТРОЙКА APACHE ===
-echo "==> Настройка Apache..."
-
-cat > /etc/httpd2/conf/sites-available/moodle.conf <<EOF
-<VirtualHost *:80>
-    ServerName hq-srv.hq.work
-    ServerAlias moodle.hq-srv.hq.work
-    DocumentRoot "$MOODLE_DIR"
-    <Directory "$MOODLE_DIR">
-        Options Indexes FollowSymLinks
-        AllowOverride All
-        Require all granted
-    </Directory>
-</VirtualHost>
-EOF
-
-ln -s /etc/httpd2/conf/sites-available/moodle.conf /etc/httpd2/conf/sites-enabled/
-
-sed -i "s/; max_input_vars = 1000/max_input_vars = 5000/g" /etc/php/8.0/apache2-mod_php/php.ini
-
-systemctl restart httpd2
-systemctl enable httpd2
 
 echo "✅ Moodle успешно установлен в headless-режиме!"
 echo "🌐 Перейдите по адресу: $MOODLE_URL"
