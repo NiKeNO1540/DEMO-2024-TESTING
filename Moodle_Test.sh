@@ -13,7 +13,7 @@ MOODLE_SITE_NAME="Moodle"
 MOODLE_ADMIN_USER="admin"
 MOODLE_ADMIN_PASS="P@ssw0rd"
 MOODLE_ADMIN_EMAIL="admin@hq-srv.hq.work"
-MOODLE_URL="http://localhost"  # можно заменить на IP/домен
+MOODLE_URL="http://moodle.hq-srv.hq.work"  # можно заменить на IP/домен
 
 # === УСТАНОВКА ЗАВИСИМОСТЕЙ ===
 echo "==> Установка необходимых пакетов..."
