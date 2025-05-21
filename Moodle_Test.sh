@@ -36,20 +36,20 @@ EOF
 
 # === УСТАНОВКА MOODLE ===
 echo "==> Загрузка и установка Moodle..."
-apt-get install –y git
+apt-get install -y git
 git clone git://git.moodle.org/moodle.git
 cd moodle
-git branch –a 
 git branch --track MOODLE_403_STABLE origin/MOODLE_403_STABLE
 git checkout MOODLE_403_STABLE
 cd ../
-cp –R moodle /var/www/html
+cp -R moodle /var/www/html
 
 mkdir -p "$MOODLE_DATA"
 chown -R apache2:apache2 "$MOODLE_DATA"
-chmod -R 770 "$MOODLE_DATA"
+chmod -R 777 "$MOODLE_DATA"
 
-chown -R apache:apache "$MOODLE_DIR"
+chown -R apache2:apache2 "$MOODLE_DIR"
+chmod -R 777 "$MOODLE_DIR"
 
 # === НАСТРОЙКА APACHE ===
 echo "==> Настройка Apache..."
