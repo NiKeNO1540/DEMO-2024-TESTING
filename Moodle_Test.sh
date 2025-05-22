@@ -99,7 +99,11 @@ sudo -u apache2 /usr/bin/php admin/cli/install.php \
   --non-interactive \
   --agree-license
 
-echo "✅ Moodle успешно установлен в headless-режиме!"
-echo "🌐 Перейдите по адресу: $MOODLE_URL"
-echo "👤 Админ: $MOODLE_ADMIN_USER"
-echo "🔑 Пароль: $MOODLE_ADMIN_PASS"
+echo " Moodle успешно установлен в headless-режиме!"
+echo " Перейдите по адресу: $MOODLE_URL"
+echo "Админ: $MOODLE_ADMIN_USER"
+echo "Пароль: $MOODLE_ADMIN_PASS"
+
+echo "Почти..."
+
+curl --output moodle.zip "https://s992sas.storage.yandex.net/rdisk/d70686c256c479b9701f5fbae1cb45bcae17cc8390944522bfbd4288683c6ac1/682f3654/T6m-CSJKXr9JQrbYeZofZuILM4qtgz6YcrS6pmiZ7U02ED03rdQNuPS9BSFO7WIxiO_13b3JQAo_dWeVmMAGKA==?uid=1888235909&filename=moodle.zip&disposition=attachment&hash=&limit=0&content_type=application%2Fzip&owner_uid=1888235909&fsize=666595714&hid=1cdb5f3373989744b5dc6f204470395b&media_type=compressed&tknv=v3&etag=ca29db57743da134dcdef47adedd5622&ts=635ba66bb3d00&s=142cff222a5f447c38b3d6d7d88b2da691c1701b20fe262a4f850880ce743c18&pb=U2FsdGVkX1_l6ZW-N8pCm34Ek3x5iHDMfBoVuuwNWaYxeRAHVPUlmhliQPo81kAM4D8rnqUKidwfB_warCR78MJX8jD8oetx08GUnN605ec"
