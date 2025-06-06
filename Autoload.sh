@@ -1,3 +1,22 @@
 #! /bin/bash
 
-apt-get update && apt-get install apache2 php8.2 apache2-mod_php8.2 mariadb-server php8.2-opcache php8.2-curl php8.2-gd php8.2-intl php8.2-mysqli php8.2-ldap php8.2-zip php8.2-soap php8.2-mbstring php8.2-json php8.2-fileinfo php8.2-sodium php8.2-xml php8.2-xmlrpc php8.2-xmlreader
+apt-get update -y
+apt-get install apache -y
+apt-get install php8.2 -y 
+apt-get install apache2-mod_php8.2 -y
+apt-get install mariadb-server -y
+apt-get install php8.2-opcache -y
+apt-get install php8.2-curl -y
+apt-get install php8.2-gd -y
+apt-get install php8.2-intl -y
+apt-get install php8.2-mysqli -y
+apt-get install php8.2-ldap -y
+apt-get install php8.2-zip -y
+apt-get install php8.2-soap -y
+apt-get install php8.2-mbstring -y
+apt-get install php8.2-json -y
+apt-get install php8.2-fileinfo -y
+apt-get install php8.2-sodium -y
+apt-get install php8.2-xml -y
+apt-get install php8.2-xmlrpc -y 
+apt-get install php8.2-xmlreader -y
