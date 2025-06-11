@@ -310,3 +310,10 @@ chmod 777 /opt/{branch,network,admin}
 EOF
 
 ansible-playbook /root/DEMO-2024-TESTING/pam.yml
+
+
+
+scp /DEMO-2024-TESTING/Moodle_Tesh.sh root@55.55.55.2:/root/Moodle.sh
+
+echo "chmod +x Moodle.sh" | ssh root@55.55.55.2
+echo "./Moodle.sh" | ssh root@55.55.55.2
