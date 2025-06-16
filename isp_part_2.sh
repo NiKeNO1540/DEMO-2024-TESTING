@@ -312,8 +312,10 @@ EOF
 ansible-playbook /root/DEMO-2024-TESTING/pam.yml
 
 
-
-scp /DEMO-2024-TESTING/Moodle_Tesh.sh root@55.55.55.2:/root/Moodle.sh
-
-echo "chmod +x Moodle.sh" | ssh root@55.55.55.2
-echo "./Moodle.sh" | ssh root@55.55.55.2
+cat << EOF | ssh root@55.55.55.2
+apt-get install deploy -y
+deploy moodle
+deploy moodle password=P@ssw0rd
+deploy mediawiki
+deploy mediawiki password=P@ssw0rd
+EOF
