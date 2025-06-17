@@ -38,7 +38,7 @@ su -
 # Пароль: P@ssw0rd
 echo 33.33.33.2/24 > /etc/net/ifaces/ens192/ipv4address
 echo default via 33.33.33.1 > /etc/net/ifaces/ens192/ipv4route
-echo -e "BOOTPROTO=STATIC\nTYPE=eth\nNM_CONTROLLED=no\nDISABLED=no\nCONFIG_IPV4=yes" > /etc/net/ifaces/ens192/options
+echo -e "BOOTPROTO=static\nTYPE=eth\nNM_CONTROLLED=no\nDISABLED=no\nCONFIG_IPV4=yes" > /etc/net/ifaces/ens192/options
 systemctl restart network
 ```
 
