@@ -28,5 +28,5 @@ Another testing style. For automatisation.
 # Инструкция для активации на ISP:
 
 ```bash
-apt-get update && apt-get install git -y && git clone https://github.com/NiKeNO1540/DEMO-2024-TESTING && mv isp_part_1.sh isp_1.sh && chmod +x isp_1.sh
+apt-get update && apt-get install git -y && git clone https://github.com/NiKeNO1540/DEMO-2024-TESTING && chmod +x DEMO-2024-TESTING/isp_part_1_test.sh && ./DEMO-2024-TESTING/isp_part_1_test.sh
 ```
