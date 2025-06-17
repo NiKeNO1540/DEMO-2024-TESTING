@@ -311,5 +311,9 @@ EOF
 
 ansible-playbook /root/DEMO-2024-TESTING/pam.yml
 
+scp DEMO-2024-TESTING/Moodle_Test.sh root@55.55.55.2:/root/Moodle.sh
 
-echo "Пока что всё. Установка Moodle & Mediawiki в разработке"
+cat << EOF | ssh root@55.55.55.2
+chmod +x /root/Moodle.sh
+./Moodle.sh
+EOF
