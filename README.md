@@ -5,7 +5,40 @@ Another testing style. For automatisation.
 
 ### BR-RTR | HQ-RTR | CLI
 
-- Базовая коммутация до ISP-a (Чтобы IP-адреса были скоммутированны изначально)
+- Базовая коммутация до ISP-a (Чтобы IP-адреса были заданы изначально):
+
+#### HQ-RTR
+
+```bash
+mkdir /etc/net/ifaces/ens224
+echo 11.11.11.1/26 > /etc/net/ifaces/ens192/ipv4address
+cp /etc/net/ifaces/ens192/options /etc/net/ifaces/ens224/options
+echo 22.22.22.1/30 > /etc/net/ifaces/ens224/ipv4address
+echo default via 22.22.22.1 > /etc/net/ifaces/ens224/ipv4route
+systemctl restart network
+```
+
+#### BR-RTR
+```bash
+mkdir /etc/net/ifaces/ens224
+echo 44.44.44.2/30 > /etc/net/ifaces/ens192/ipv4address
+echo default via 44.44.44.1 > /etc/net/ifaces/ens192/ipv4route
+cp /etc/net/ifaces/ens192/options /etc/net/ifaces/ens224/options
+echo 55.55.55.1/28 > /etc/net/ifaces/ens224/ipv4address
+systemctl restart network
+```
+
+#### CLI
+```bash
+# Открывайте терминал через ПКМ по рабочему столу > Терминал
+
+su -
+# Пароль: P@ssw0rd
+echo 33.33.33.2/24 > /etc/net/ifaces/ens192/ipv4address
+echo default via 33.33.33.1 > /etc/net/ifaces/ens192/ipv4route
+sed -i "s/DISABLED
+```
+
 - Добавление пользователя student в группу wheel и уравнение прав на уровне root-a
 - (CLI ONLY) Разрешение вход под root через ssh (неизвестно, но на этой машине нету команды sudo)
 
