@@ -106,31 +106,3 @@ echo " Moodle успешно установлен в headless-режиме!"
 echo " Перейдите по адресу: $MOODLE_URL"
 echo "Админ: $MOODLE_ADMIN_USER"
 echo "Пароль: $MOODLE_ADMIN_PASS"
-
-echo "Почти..."
-
-echo "==> Установка реальной moodle..."
-
-# Сохраняем публичную ссылку в переменную
-PUBLIC_LINK="https://disk.yandex.ru/d/eG9AroTg7RIDqw"
-
-# Получаем прямую ссылку на скачивание через API
-DOWNLOAD_URL=$(curl -s "https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=$PUBLIC_LINK" | grep -oP '(?<="href":")[^"]+')
-
-# Проверка, что ссылка получена
-if [ -z "$DOWNLOAD_URL" ]; then
-  echo "Не удалось получить ссылку на скачивание."
-  exit 1
-fi
-
-# Скачиваем файл по полученной ссылке
-# Вы можете задать имя файла вручную, либо позволить curl использовать имя из URL
-curl -L -o moodle.zip "$(printf %s "$DOWNLOAD_URL")"
-
-unzip moodle.zip
-
-mv -f moodle "$MOODLE_DIR"
-mv -f moodledata "$MOODLE_DATA"
-
-systemctl restart httpd2
-systemctl restart apache2
