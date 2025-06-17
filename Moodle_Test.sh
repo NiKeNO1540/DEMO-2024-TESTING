@@ -83,7 +83,7 @@ cd "$MOODLE_DIR"
 
 sudo -u apache2 /usr/bin/php admin/cli/install.php \
   --chmod=770 \
-  --lang=ru \
+  --lang=en \
   --wwwroot="$MOODLE_URL" \
   --dataroot="$MOODLE_DATA" \
   --dbtype=mysqli \
