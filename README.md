@@ -1,11 +1,20 @@
 # DEMO-2024-TESTING
 Another testing style. For automatisation.
 
+---
+
 # Преднастройка:
 
 ### ESXI
 
 - Добавление временного подключения между CLI и HQ-SRV
+
+#### Инструкция
+
+Зайди на адрес своего ESXI, пароль будет P@ssw0rd. Далее как на скринах.
+
+![image](https://github.com/user-attachments/assets/af597374-9169-4069-82ff-92105bc9c960)
+![image](https://github.com/user-attachments/assets/8904125b-74a7-446a-b352-5223bcf9e44d)
 
 
 ### BR-RTR | HQ-RTR | CLI
