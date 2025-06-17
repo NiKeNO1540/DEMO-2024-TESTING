@@ -71,7 +71,10 @@ EOF
 
 ln -s /etc/httpd2/conf/sites-available/moodle.conf /etc/httpd2/conf/sites-enabled/
 
+echo "Задержка, чтобы заработало."
+sleep 1
 sed -i "s/; max_input_vars = 1000/max_input_vars = 5000/g" /etc/php/8.0/apache2-mod_php/php.ini
+echo "Дальше, перезапуск служб."
 
 systemctl restart httpd2
 systemctl enable --now httpd2
