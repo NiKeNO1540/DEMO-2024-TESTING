@@ -3,6 +3,11 @@ Another testing style. For automatisation.
 
 # Преднастройка:
 
+### ESXI
+
+- Добавление временного подключения между CLI и HQ-SRV
+
+
 ### BR-RTR | HQ-RTR | CLI
 
 - Базовая коммутация до ISP-a (Чтобы IP-адреса были заданы изначально):
