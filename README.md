@@ -59,6 +59,7 @@ vim /etc/openssh/sshd_config
 # 32-ая строка > Убрать решетку и заменить without-password на yes
 :wq
 systemctl enable --now sshd
+reboot
 ```
 
 ### BR-SRV | HQ-SRV 
