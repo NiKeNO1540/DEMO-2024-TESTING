@@ -14,7 +14,6 @@ mkdir /etc/net/ifaces/ens224
 echo -e "BOOTPROTO=static\nTYPE=eth\nDISABLED=no\nCONFIG_IPV4=yes" > /etc/net/ifaces/ens192/options
 echo -e "BOOTPROTO=static\nTYPE=eth\nDISABLED=no\nCONFIG_IPV4=yes" > /etc/net/ifaces/ens224/options
 echo 11.11.11.1/26 > /etc/net/ifaces/ens192/ipv4address
-cp /etc/net/ifaces/ens192/options /etc/net/ifaces/ens224/options
 echo 22.22.22.1/30 > /etc/net/ifaces/ens224/ipv4address
 echo default via 22.22.22.1 > /etc/net/ifaces/ens224/ipv4route
 systemctl restart network
@@ -27,7 +26,6 @@ echo -e "BOOTPROTO=static\nTYPE=eth\nDISABLED=no\nCONFIG_IPV4=yes" > /etc/net/if
 echo -e "BOOTPROTO=static\nTYPE=eth\nDISABLED=no\nCONFIG_IPV4=yes" > /etc/net/ifaces/ens224/options
 echo 44.44.44.2/30 > /etc/net/ifaces/ens192/ipv4address
 echo default via 44.44.44.1 > /etc/net/ifaces/ens192/ipv4route
-cp /etc/net/ifaces/ens192/options /etc/net/ifaces/ens224/options
 echo 55.55.55.1/28 > /etc/net/ifaces/ens224/ipv4address
 systemctl restart network
 ```
