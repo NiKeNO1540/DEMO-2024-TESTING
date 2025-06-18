@@ -323,6 +323,7 @@ EOF
 # Запуск Mediawiki
 
 scp DEMO-2024-TESTING/Mediawiki.sh root@55.55.55.2:/root/Mediawiki.sh
+scp DEMO-2024-TESTING/wiki.yml root@55.55.55.2:/root/wiki.yml
 
 echo "iptables -t nat -A PREROUTING -i ens224 -p tcp --dport 8080 -j DNAT --to-destination 11.11.11.2:8080" | ssh root@22.22.22.2
 
