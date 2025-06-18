@@ -11,9 +11,12 @@ Another testing style. For automatisation.
 
 #### Инструкция
 
-Зайди на адрес своего ESXI, пароль будет P@ssw0rd. Далее как на скринах.
+Зайди на адрес своего ESXI, пароль будет P@ssw0rd. Зайди в Networking > Add Port Group Далее как на скринах.
 
 ![image](https://github.com/user-attachments/assets/af597374-9169-4069-82ff-92105bc9c960)
+
+Затем зайди в Virtual Machines, и добавить на CLI и HQ-SRV новое подключение путем ПКМ на них > Edit Settings, как на скрине.
+
 ![image](https://github.com/user-attachments/assets/8904125b-74a7-446a-b352-5223bcf9e44d)
 
 
@@ -61,7 +64,7 @@ systemctl restart network
 #### HQ-RTR | BR-RTR
 ```bash
 visudo
-# Пишите 123G > Стрелка влево > Нажать "D" затем стрелка вправо > :wq
+# Пишите 123G > Стрелка вправо > Нажать "D" затем стрелка вправо > :wq
 gpasswd -a "student" wheel
 ```
 
@@ -102,7 +105,7 @@ systemctl restart network
 
 ```bash
 visudo
-# Пишите 123G > Стрелка влево > Нажать "D" затем стрелка вправо > :wq
+# Пишите 123G > Стрелка вправо > Нажать "D" затем стрелка вправо > :wq
 gpasswd -a "student" wheel
 ```
 
