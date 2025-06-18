@@ -165,3 +165,33 @@ apt-get update && apt-get install git -y && git clone https://github.com/NiKeNO1
 ![image](https://github.com/user-attachments/assets/2f00e52c-dd91-4848-a127-1a667c59f87f)
 ![image](https://github.com/user-attachments/assets/1fa94e25-4cf0-4a22-9710-ca3dd9b15710)
 ![image](https://github.com/user-attachments/assets/3f8aa51a-7d03-419c-8942-3882b9a0710e)
+
+#### Вторая вкладка (Mediawiki)
+
+![image](https://github.com/user-attachments/assets/e922a82f-1a77-4a80-accd-67f43789a588)
+![image](https://github.com/user-attachments/assets/3cf78957-a007-4574-bc03-10bd26d789ae)
+![image](https://github.com/user-attachments/assets/ea61ea18-87b7-4a0f-b840-1facc0498e5b)
+![image](https://github.com/user-attachments/assets/eaa4fcdc-d344-431b-b26e-baa27c7d0cd4)
+![image](https://github.com/user-attachments/assets/4387ea44-f6e1-43af-a107-515e932056d9)
+![image](https://github.com/user-attachments/assets/3879e8e9-92c7-43f0-ad53-41a758c6b77f)
+![image](https://github.com/user-attachments/assets/c8abebdf-59a5-4250-bc5b-3dd2f5b4fd6b)
+![image](https://github.com/user-attachments/assets/2f904e16-bdce-427c-9e9e-5790f37d222e)
+![image](https://github.com/user-attachments/assets/45d7323e-d858-4d11-a0d4-0ece55d3ee1d)
+![image](https://github.com/user-attachments/assets/66b7b8c6-d0a9-4286-a5a9-55c826e7b940)
+
+После того, как вам скачался файл LocalSettings.php
+
+#### CLI
+
+```bash
+scp -P 2222 /home/HQ.WORK/administrator/Загрузки/LocalSettings.php student@11.11.11.2:/home/student/
+# Пароль: P@ssw0rd
+```
+
+####
+
+HQ-SRV
+```bash
+mv /home/student/LocalSettings.php ~/
+docker compose -f wiki.yml stop && docker compose -f wiki.yml up -d
+```
