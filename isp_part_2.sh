@@ -324,6 +324,8 @@ EOF
 
 scp DEMO-2024-TESTING/Mediawiki.sh root@55.55.55.2:/root/Mediawiki.sh
 
+echo "iptables -t nat -A PREROUTING -i ens224 -p tcp --dport 8080 -j DNAT --to-destination 11.11.11.2:8080" | ssh root@22.22.22.2
+
 cat << EOF | ssh root@55.55.55.2
 chmod +x /root/Mediawiki.sh
 ./Mediawiki.sh
