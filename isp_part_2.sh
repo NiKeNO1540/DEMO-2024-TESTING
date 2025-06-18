@@ -325,6 +325,10 @@ EOF
 scp -P 2222 DEMO-2024-TESTING/Mediawiki.sh root@11.11.11.2:/root/Mediawiki.sh
 scp -P 2222 DEMO-2024-TESTING/wiki.yml root@11.11.11.2:/root/wiki.yml
 
+cat << EOF | ssh root@33.33.33.2
+echo 55.55.55.2 moodle.hq-srv.hq.work moodle >> /etc/hosts
+EOF
+
 echo "iptables -t nat -A PREROUTING -i ens224 -p tcp --dport 8080 -j DNAT --to-destination 11.11.11.2:8080" | ssh root@22.22.22.2
 
 cat << EOF | ssh root@11.11.11.2
