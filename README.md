@@ -64,7 +64,7 @@ systemctl restart network
 #### HQ-RTR | BR-RTR
 ```bash
 visudo
-# Пишите 123G > Стрелка вправо > Нажать "D" затем стрелка вправо > :wq
+# Пишите 123, потом Shift+G > Стрелка вправо > Нажать "D" затем стрелка вправо > :wq
 gpasswd -a "student" wheel
 ```
 
@@ -73,7 +73,7 @@ gpasswd -a "student" wheel
 #### CLI
 ```bash
 vim /etc/openssh/sshd_config
-# 32-ая строка > Убрать решетку и заменить without-password на yes
+# 32-ая строка(Нажать 32, затем Shift+G) > Убрать решетку и заменить without-password на yes
 :wq
 systemctl enable --now sshd
 reboot
@@ -125,3 +125,43 @@ gpasswd -a "student" wheel
 ```bash
 apt-get update && apt-get install git -y && git clone https://github.com/NiKeNO1540/DEMO-2024-TESTING && chmod +x DEMO-2024-TESTING/isp_part_1_test.sh && ./DEMO-2024-TESTING/isp_part_1_test.sh
 ```
+
+---
+
+# Команды после автоматизации
+
+### CLI
+
+После установки перезапустить компьютер. Затем войти под administrator с паролем P@ssw0rd.
+
+Затем открыть браузер Firefox и открыть две вкладки. На одной вкладке вписать http://moodle.hq-srv.hq.work, на второй 11.11.11.2:8080
+
+#### Первая вкладка (Moodle)
+
+![image](https://github.com/user-attachments/assets/9259389f-9de7-4f6e-81ff-9920fdaac47e)
+![image](https://github.com/user-attachments/assets/ba58b059-2d8d-4d1d-80a1-2492d6ed0d42)
+![image](https://github.com/user-attachments/assets/18c9c353-5831-4178-b305-777e34fb09e2)
+![image](https://github.com/user-attachments/assets/66084423-6c8d-4a4b-a4e0-ea58b33b82d7)
+![image](https://github.com/user-attachments/assets/9713bebe-7159-4413-a0af-9c3750dd0467)
+![image](https://github.com/user-attachments/assets/7e8e52c6-27f3-460a-b291-1d66ce9f5310)
+![image](https://github.com/user-attachments/assets/048fb504-ef32-45d9-831e-1534c8137a55)
+![image](https://github.com/user-attachments/assets/b30c82eb-4564-4b1f-a0ab-f118dec7ed3a)
+![image](https://github.com/user-attachments/assets/c58d5b9e-456a-4fc3-8c83-008e5c7bf1e1)
+![image](https://github.com/user-attachments/assets/82943536-c001-4216-8f8d-52dafbac5821)
+![image](https://github.com/user-attachments/assets/b819ad3b-39d3-446a-82cf-b0c280c0f241)
+![image](https://github.com/user-attachments/assets/8605dd0f-2067-4a57-a91a-79c213254da6)
+![image](https://github.com/user-attachments/assets/d1ad4a3b-de8c-48aa-80db-a608bc1522fe)
+![image](https://github.com/user-attachments/assets/6168f965-17f0-4894-96e3-0e13bd6ef9a9)
+![image](https://github.com/user-attachments/assets/b428c0ca-2d30-48cf-babf-c34d6fa8a945)
+![image](https://github.com/user-attachments/assets/741e15d2-0c18-4eaf-8feb-93182f958fd4)
+![image](https://github.com/user-attachments/assets/8c79ae3b-230e-4f8d-b515-c11da83ed18b)
+![image](https://github.com/user-attachments/assets/bc762365-999e-4679-af12-0257527342cc)
+![image](https://github.com/user-attachments/assets/43791251-3e01-425d-a77d-49cdef114dbc)
+![image](https://github.com/user-attachments/assets/35bc0673-fd45-40ca-86a8-82c26d73e5c9)
+![image](https://github.com/user-attachments/assets/f21239a1-4b0a-4e4d-9b98-94e3823f95f0)
+![image](https://github.com/user-attachments/assets/99a2bb33-d024-465a-a9ff-0c35762307c0)
+![image](https://github.com/user-attachments/assets/1835f84d-252e-4f12-89d8-3887b9cb85eb)
+![image](https://github.com/user-attachments/assets/3433276a-f027-45a4-af62-5c636aece5bc)
+![image](https://github.com/user-attachments/assets/2f00e52c-dd91-4848-a127-1a667c59f87f)
+![image](https://github.com/user-attachments/assets/1fa94e25-4cf0-4a22-9710-ca3dd9b15710)
+![image](https://github.com/user-attachments/assets/3f8aa51a-7d03-419c-8942-3882b9a0710e)
