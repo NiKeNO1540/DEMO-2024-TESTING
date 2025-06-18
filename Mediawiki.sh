@@ -1,6 +1,6 @@
 #! /bin/bash
 
-apt-get install -y docker-ce docker-compose –y
+apt-get update && apt-get install -y docker-ce docker-compose –y
 systemctl enable --now docker.service
 
 mv DEMO-2024-TESTING/LocalSettings.php ~/
