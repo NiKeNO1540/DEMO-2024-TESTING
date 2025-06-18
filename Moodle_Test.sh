@@ -39,7 +39,7 @@ EOF
 # === УСТАНОВКА MOODLE ===
 echo "==> Загрузка и установка Moodle..."
 apt-get install -y git
-git clone git://git.moodle.org/moodle.git
+git clone https://github.com/moodle/moodle.git
 cd moodle
 git branch --track MOODLE_403_STABLE origin/MOODLE_403_STABLE
 git checkout MOODLE_403_STABLE
