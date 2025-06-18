@@ -10,7 +10,7 @@ services:
       - database
     volumes:
       - images:/var/www/html/images
-      - ./LocalSettings.php:/var/www/html/LocalSettings.php
+      # - ./LocalSettings.php:/var/www/html/LocalSettings.php
 
   database:
     container_name: db
