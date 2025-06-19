@@ -94,7 +94,7 @@ systemctl restart network
 #### BR-SRV
 ```bash
 echo -e "BOOTPROTO=static\nTYPE=eth\nDISABLED=no\nCONFIG_IPV4=yes" > /etc/net/ifaces/ens192/options
-echo 55.55.55.2/26 > /etc/net/ifaces/ens192/ipv4address
+echo 55.55.55.2/28 > /etc/net/ifaces/ens192/ipv4address
 echo default via 55.55.55.1 > /etc/net/ifaces/ens192/ipv4route
 systemctl restart network
 ```
