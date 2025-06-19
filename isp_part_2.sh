@@ -331,7 +331,7 @@ EOF
 
 echo "iptables -t nat -A PREROUTING -i ens224 -p tcp --dport 8080 -j DNAT --to-destination 11.11.11.2:8080" | ssh root@22.22.22.2
 
-cat << EOF | ssh root@11.11.11.2
+cat << EOF | ssh root@11.11.11.2 -p 2222
 chmod +x /root/Mediawiki.sh
 ./Mediawiki.sh
 EOF
