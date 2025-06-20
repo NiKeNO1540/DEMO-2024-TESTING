@@ -343,16 +343,20 @@ useradd branch_admin
 echo -e 'P@ssw0rd\nP@ssw0rd" | passwd branch_admin
 useradd network_admin
 echo -e 'P@ssw0rd\nP@ssw0rd' | passwd network_admin
+usermod -aG root branch_admin
+usermod -aG root network_admin
 EOF
 
 cat << EOF | ssh root@11.11.11.2 -p 2222
 useradd admin
 echo -e "P@ssw0rd\nP@ssw0rd" | passwd admin
+usermod -aG root admin
 EOF
 
 cat << EOF | ssh root@33.33.33.2
 useradd admin
 echo -e "P@ssw0rd\nP@ssw0rd" | passwd admin
+usermod -aG root admin
 EOF
 
 cat << EOF | ssh root@55.55.55.2
@@ -360,6 +364,8 @@ useradd branch_admin
 echo -e 'P@ssw0rd\nP@ssw0rd" | passwd branch_admin
 useradd network_admin
 echo -e 'P@ssw0rd\nP@ssw0rd' | passwd network_admin
+usermod -aG root branch_admin
+usermod -aG root network_admin
 EOF
 
 cat << EOF | ssh root@22.22.22.2
@@ -367,6 +373,8 @@ useradd admin
 echo -e "P@ssw0rd\nP@ssw0rd" | passwd admin
 useradd network_admin
 echo -e 'P@ssw0rd\nP@ssw0rd' | passwd network_admin
+usermod -aG root admin
+usermod -aG root network_admin
 EOF
 
 
