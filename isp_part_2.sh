@@ -335,3 +335,6 @@ cat << EOF | ssh root@11.11.11.2 -p 2222
 chmod +x /root/Mediawiki.sh
 ./Mediawiki.sh
 EOF
+
+
+echo "Потраченное время: ($SECONDS) секунд"
