@@ -396,7 +396,7 @@ echo 'server 11.11.11.1 iburst prefer' > /etc/chrony.conf
 systemctl enable --now chronyd
 EOF
 
-cat << EOF | ssh root@33.33.33.2
+cat << EOF | ssh root@11.11.11.2 -p 2222
 echo 'AllowUsers *@11.11.11.0/26 *@55.55.55.0/28 *@22.22.22.0/30 *@44.44.44.0/30' >> /etc/openssh/sshd_config
 systemctl restart sshd
 EOF
